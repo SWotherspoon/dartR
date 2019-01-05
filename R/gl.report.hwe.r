@@ -97,7 +97,7 @@ gl.report.hwe <- function(x, subset="each", plot=FALSE, method="ChiSquare", alph
   #### Single or Pooled populations
 
   if(flag == 1){
-    result <- dartR:::utils.hwe(gl, prob=alpha)
+    result <- utils.hwe(gl, prob=alpha)
     mat <- array(NA,3*dim(result)[1])
     dim(mat) <- c(dim(result)[1],3)
     mat[,1] <- as.numeric(as.character(result$Hom_1)) # for God knows why
@@ -136,11 +136,11 @@ gl.report.hwe <- function(x, subset="each", plot=FALSE, method="ChiSquare", alph
         next
       }
       if (count == 1) {
-        result <- dartR:::utils.hwe(ii, prob=p)
+        result <- utils.hwe(ii, prob=p)
         Population <- rep(names(poplist)[count],nrow(result))
         result <- cbind(Population,result)
       } else {
-        r <- dartR:::utils.hwe(ii, prob=p)
+        r <- utils.hwe(ii, prob=p)
         Population <- rep(names(poplist)[count],nrow(r))
         r <- cbind(Population,r)
         result <- rbind(result, r)
@@ -174,7 +174,7 @@ gl.report.hwe <- function(x, subset="each", plot=FALSE, method="ChiSquare", alph
         next
       }
       # Plot the tertiary plots
-      a <- dartR:::utils.hwe(ii, prob=alpha)
+      a <- utils.hwe(ii, prob=alpha)
       mat <- array(NA,3*dim(a)[1])
       dim(mat) <- c(dim(a)[1],3)
       mat[,1] <- as.numeric(as.character(a$Hom_1)) # for God knows why

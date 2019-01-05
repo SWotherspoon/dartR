@@ -9,7 +9,7 @@
 #' @return The modified genlight object
 #' @author Arthur Georges (Post to \url{https://groups.google.com/d/forum/dartr})
 #' @examples
-#' #f <- dartR:::utils.recalc.rdepth(testset.gl)
+#' #f <- utils.recalc.rdepth(testset.gl)
 utils.recalc.rdepth <- function(gl) {
   gl@other$loc.metrics$rdepth <- gl@other$loc.metrics$AvgCountRef + g@other$loc.metrics$AvgCountSnp
   gl

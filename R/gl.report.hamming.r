@@ -1,31 +1,28 @@
 #' Calculates the pairwise Hamming distance between DArT trimmed DNA sequences
 #'
-#' Hamming distance is calculated as the number of base differences between two 
+#' Hamming distance is calculated as the number of base differences between two
 #' sequences which can be expressed as a count or a proportion. Typically, it is
 #' calculated between two sequences of equal length. In the context of DArT
 #' trimmed sequences, which differ in length but which are anchored to the left
 #' by the restriction enzyme recognition sequence, it is sensible to compare the
 #' two trimmed sequences starting from immediately after the common recognition
-#' sequence and terminating at the last base of the shorter sequence. 
-#' 
-#' Hamming distance can be computed 
+#' sequence and terminating at the last base of the shorter sequence.
+#'
+#' Hamming distance can be computed
 #' by exploiting the fact that the dot product of two binary vectors x and (1-y)
 #' counts the corresponding elements that are different between x and y.
-#' This approach can also be used for vectors that contain more than two possible 
+#' This approach can also be used for vectors that contain more than two possible
 #' values at each position (e.g. A, C, T or G).
 #'
 #' If a pair of DNA sequences are of differing length, the longer is truncated.
 #'
-#' The algorithm is that of Johann de Jong 
-#' \url{https://johanndejong.wordpress.com/2015/10/02/faster-hamming-distance-in-r-2/}
-#' as implimented in dartR:::utils.hamming.r
-#' 
-#' A histogram and or a smearplot can be requested. Note that the smearplot is computationally intensive, and will take time to 
+#'
+#' A histogram and or a smearplot can be requested. Note that the smearplot is computationally intensive, and will take time to
 #' execute on large datasets.
 #'
 #' @param x -- genlight object [required]
 #' @param rs -- number of bases in the restriction enzyme recognition sequence [default = 5]
-#' @param plot specify if a histogram of Hamming distance is to be produced [default FALSE] 
+#' @param plot specify if a histogram of Hamming distance is to be produced [default FALSE]
 #' @param smearplot if TRUE, will produce a smearplot of individuals against loci [default FALSE]
 #' @param probar -- if TRUE, then a progress bar is desplayed on long loops [default = TRUE]
 #' @return Tabulation of loc that will be lost on filtering, against values of the threshold
@@ -38,9 +35,9 @@
 #' gl.report.hamming(testset.gl)
 
 gl.report.hamming <- function(x, rs=5, plot=FALSE, smearplot=FALSE, probar=TRUE) {
-  
+
 # ERROR CHECKING
-  
+
   if(class(x)!="genlight") {
     cat("Fatal Error: genlight object required!\n"); stop("Execution terminated\n")
   }
@@ -70,14 +67,14 @@ gl.report.hamming <- function(x, rs=5, plot=FALSE, smearplot=FALSE, probar=TRUE)
     cat("Calculating pairwise Hamming distances between trimmed reference sequence tags\n")
   count=0
   nL <- nLoc(x)
-  
+
   # Calculate the number of iterations in loops below to set dimensions of d
   # niter = sum i=1 to nL-1 of (nL - i)
   # niter = sum i=1 to nL-1 of (nL) - sum i=1 to nL-1 of (i)
   # niter = nL(nL-1) - (nL-1)nL/2 [triangle number]
   # niter = nL(nL-1)/2 which seem intuitive
   d <- rep(NA,(((nL-1)*nL)/2))
-  
+
   if( probar ) {
     pb <- txtProgressBar(min=0, max=1, style=3, initial=0, label="Working ....")
     getTxtProgressBar(pb)
@@ -93,22 +90,22 @@ gl.report.hamming <- function(x, rs=5, plot=FALSE, smearplot=FALSE, probar=TRUE)
 
   # Plot a histogram of Hamming distance
   par(mfrow = c(2, 1),pty="m")
-  
+
   if (plot) {
-    hist(d, 
-         main="Hamming distance between Loci taken pairwise", 
-         xlab="Hamming distance", 
-         border="blue", 
+    hist(d,
+         main="Hamming distance between Loci taken pairwise",
+         xlab="Hamming distance",
+         border="blue",
          col="red",
          xlim=c(0,1),
          breaks=100)
-  }  
+  }
   if(smearplot){
     glPlot(x)
-  } 
-  
+  }
+
    xlimit <- min(d)
-   
+
    cat("No. of loci =", nLoc(x), "\n")
    cat("No. of individuals =", nInd(x), "\n")
    cat("  Miniumum Hamming distance: ",round(min(d),2),"\n")
@@ -137,7 +134,7 @@ gl.report.hamming <- function(x, rs=5, plot=FALSE, smearplot=FALSE, probar=TRUE)
    rownames(df) <- NULL
    cat("Note: The data below are calculated from pairwise distances between",nL,"loci, for which there are",((((nL-1)*nL)/2)), "distances\n")
    print(df)
-   
+
    # FLAG SCRIPT END
      cat("gl.report.hamming Completed\n")
 

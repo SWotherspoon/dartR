@@ -11,7 +11,7 @@
 ##' @return the modified genlight object
 ##' @author Arthur Georges (Post to \url{https://groups.google.com/d/forum/dartr})
 ##' @examples
-##' #f <- dartR:::utils.recalc.freq(testset.gl)
+##' #f <- utils.recalc.freq(testset.gl)
 utils.recalc.freq <- function(gl) {
 
   x <- as.matrix(gl)
