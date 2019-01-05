@@ -1,6 +1,6 @@
 #' Calculates basic statistics for each loci (Hs, Ho, Fis etc.)
-#' 
-#' Based on function \code{\link[hierfstat]{basic.stats}}. Check ?basic.stats for help. 
+#'
+#' Based on function \code{\link[hierfstat]{basic.stats}}. Check ?basic.stats for help.
 #' @param gl -- a genlight object
 #' @param digits -- number of digits that should be returned
 #' @importFrom hierfstat genind2hierfstat basic.stats
@@ -8,8 +8,6 @@
 #' @export
 #' @author Bernd Gruber (bugs? Post to \url{https://groups.google.com/d/forum/dartr})
 
-gl.basic.stats <- function(gl, digits=4)
-{
-  out <- basic.stats(genind2hierfstat(gl2gi(gl, v = 0)), digits = digits)
-  return(out)
+gl.basic.stats <- function(gl, digits=4) {
+  basic.stats(genind2hierfstat(gl2gi(gl)), digits = digits)
 }

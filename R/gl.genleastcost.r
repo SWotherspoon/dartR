@@ -1,5 +1,5 @@
 #' Least-cost path analysis based on a friction matrix
-#' 
+#'
 #' This function calculates the pairwise distances (Euclidean, cost path distances and genetic distances) of populations using a friction matrix and a spatial genind object. The genind object needs to have coordinates in the same projected coordinate system as the friction matrix. The friction matrixcan be either a single raster of a stack of several layers. If a stack is provided the specified cost distance is calculated for each layer in the stack. The output of this function can be used with the functions \code{\link[PopGenReport]{wassermann}} or \code{\link[PopGenReport]{lgrMMRR}} to test for the significance of a layer on the genetic structure.
 #' @param x a spatial genind object. see ?popgenreport how to provide coordinates in genind objects
 #' @param fric.raster a friction matrix
@@ -24,7 +24,7 @@
 #' data(possums.gl)
 #' library(raster)  #needed for that example
 #' landscape.sim <- readRDS(system.file("extdata","landscape.sim.rdata", package="dartR"))
-#' glc <- gl.genleastcost(x=possums.gl,fric.raster=landscape.sim , 
+#' glc <- gl.genleastcost(x=possums.gl,fric.raster=landscape.sim ,
 #' gen.distance = "D", NN=8, pathtype = "leastcost",plotpath = TRUE)
 #' wassermann(eucl.mat = glc$eucl.mat, cost.mat = glc$cost.mats,  gen.mat = glc$gen.mat)
 #' lgrMMRR(gen.mat = glc$gen.mat, cost.mats = glc$cost.mats,  eucl.mat = glc$eucl.mat)
@@ -33,8 +33,8 @@
 #' @export
 gl.genleastcost <- function(x, fric.raster, gen.distance, NN=NULL, pathtype="leastcost", plotpath=TRUE, theta=1)
 {
-# 
-# pairwise_D2 <- function (x, linearized = FALSE) 
+#
+# pairwise_D2 <- function (x, linearized = FALSE)
 # {
 #       pops <- seppop(x)
 #       n.pops <- length(pops)
@@ -45,17 +45,17 @@ gl.genleastcost <- function(x, fric.raster, gen.distance, NN=NULL, pathtype="lea
 #         temp <- repool(a, b)
 #         return(D_Jost(temp)$global.het)
 #       }
-#       res <- sapply(1:dim(allP)[2], function(i) pair(allP[, i][1], 
+#       res <- sapply(1:dim(allP)[2], function(i) pair(allP[, i][1],
 #                                                      allP[, i][2]))
-#       attributes(res) <- list(class = "dist", Diag = FALSE, Upper = FALSE, 
+#       attributes(res) <- list(class = "dist", Diag = FALSE, Upper = FALSE,
 #                               Labels = popNames(x), Size = n.pops)
-# 
+#
 #       if (linearized) res <- res/(1 - res)
 #       return(res)
 # }
-#   
+#
 #   pairwise_Gst_Hedrick2 <-
-#     function (x, linearized = FALSE) 
+#     function (x, linearized = FALSE)
 #     {
 #       pops <- seppop(x)
 #       n.pops <- length(pops)
@@ -66,16 +66,16 @@ gl.genleastcost <- function(x, fric.raster, gen.distance, NN=NULL, pathtype="lea
 #         temp <- repool(a, b)
 #         return(Gst_Hedrick(temp)$global)
 #       }
-#       res <- sapply(1:dim(allP)[2], function(i) pair(allP[, i][1], 
+#       res <- sapply(1:dim(allP)[2], function(i) pair(allP[, i][1],
 #                                                      allP[, i][2]))
-#       attributes(res) <- list(class = "dist", Diag = FALSE, Upper = FALSE, 
+#       attributes(res) <- list(class = "dist", Diag = FALSE, Upper = FALSE,
 #                               Labels = popNames(x), Size = n.pops)
 #        if (linearized) res <- res/(1 - res)
 #       return(res)
 #      }
-#   
+#
 #   pairwise_Gst_Nei2 <-
-#     function (x, linearized = FALSE) 
+#     function (x, linearized = FALSE)
 #     {
 #       pops <- seppop(x)
 #       n.pops <- length(pops)
@@ -86,36 +86,36 @@ gl.genleastcost <- function(x, fric.raster, gen.distance, NN=NULL, pathtype="lea
 #         temp <- repool(a, b)
 #         return(Gst_Nei(temp)$global)
 #       }
-#       res <- sapply(1:dim(allP)[2], function(i) pair(allP[, i][1], 
+#       res <- sapply(1:dim(allP)[2], function(i) pair(allP[, i][1],
 #                                                      allP[, i][2]))
-#       attributes(res) <- list(class = "dist", Diag = FALSE, Upper = FALSE, 
+#       attributes(res) <- list(class = "dist", Diag = FALSE, Upper = FALSE,
 #                               Labels = popNames(x), Size = n.pops)
 #       if (linearized) res <- res/(1 - res)
 #       return(res)
 #     }
-#   
-# 
-#   
-  
-  
-  if (is.null(NN) & pathtype=="leastcost") 
+#
+#
+#
+
+
+  if (is.null(NN) & pathtype=="leastcost")
   {
     stop("NN is not specified!\nPlease specify the number of nearest neighbour to use for the least-cost path calculations (NN=4 or NN=8). If linear features are tested you may want to consider NN=4 otherwise NN=8 is the most commonly used and prefered option. In any case check the actual least-cost paths for artefacts by inspecting the plot on least-cost paths.\n")
 
   }
-  
+
 dist.type<-NA
-if (gen.distance=="D" || gen.distance=="Gst.Hedrick" || gen.distance=="Gst.Nei") dist.type<- "pop" 
+if (gen.distance=="D" || gen.distance=="Gst.Hedrick" || gen.distance=="Gst.Nei") dist.type<- "pop"
 
-if (gen.distance=="Kosman" || gen.distance=="Smouse" || gen.distance=="propShared") dist.type<- "ind" 
+if (gen.distance=="Kosman" || gen.distance=="Smouse" || gen.distance=="propShared") dist.type<- "ind"
 
-if (is.na(dist.type)) 
+if (is.na(dist.type))
   {stop("No valid genetic distance type was provided. Please check ?landgenreport for valid options\n")
 
 }
 
-if (is.null(x@other$xy)) 
-  
+if (is.null(x@other$xy))
+
 {
   cat("No projected coordinates in @other$xy found. Hence will use latlongs (if provided), which are not projected, hence there might be distortions if the area covered is large or close to the poles. Be aware your resistance layer and coordinates in the genlight object need to have the same coordinate system.\n")
   x@other$xy <- x@other$latlong[,c("lon","lat")]
@@ -130,14 +130,14 @@ c.x <- tapply(x@other$xy[,1],x@pop, mean)
 c.y <- tapply(x@other$xy[,2],x@pop, mean)
 cp<-cbind(c.x, c.y)
 eucl.mat <- as.matrix(dist(cp))
-dimnames(eucl.mat) <- list(popNames(x), popNames(x)) 
+dimnames(eucl.mat) <- list(popNames(x), popNames(x))
 npop <- length(levels(x@pop))
 
-} else 
+} else
 {
 cp <- cbind(x@other$xy[,1], x@other$xy[,2])
 eucl.mat <- as.matrix(dist(cp))
-dimnames(eucl.mat) <- list(indNames(x), indNames(x)) 
+dimnames(eucl.mat) <- list(indNames(x), indNames(x))
 npop <- length(indNames(x))
 }
 
@@ -180,7 +180,7 @@ if (pathtype=="leastcost") cd.mat <-costDistance(fric.mat.cor, cp, cp)
 if (pathtype=="rSPDistance") cd.mat <- rSPDistance(fric.mat.cor, cp, cp, theta=1)
 
 if (pathtype=="commute") cd.mat <-as.matrix(commuteDistance(fric.mat.cor, cp))
-dimnames(cd.mat) <- dimnames(eucl.mat) 
+dimnames(cd.mat) <- dimnames(eucl.mat)
 
 
 
@@ -204,7 +204,7 @@ if (dist(rbind(cp[comb[i,1],], cp[comb[i,2],]))==0)
  ll <- Line(rbind( cp[comb[i,1],], cp[comb[i,2],]))
  S1 <- Lines(list(ll),ID="Null")
  sPath <- SpatialLines(list(S1))
-} else 
+} else
 {
 sPath <- shortestPath(fric.mat.cor, cp[comb[i,1],], cp[comb[i,2],], output="SpatialLines")
 }
@@ -234,7 +234,7 @@ names(mats)  <- names(fric.raster)
 #put other calculations here....
 # Calculate genetic distances across subpopulations
 
-xx <- gl2gi(x, v=0)
+xx <- gl2gi(x)
 
 if (gen.distance=="Gst.Nei")
 {
