@@ -1,13 +1,12 @@
-#' A very simple function to report expected Heterozygosity
-#' 
-#' @param gl -- a genlight object
-#' @return a simple vector wiht Ho for each loci
-#' @export
-#' @author Bernd Gruber (bugs? Post to \url{https://groups.google.com/d/forum/dartr})
-
-gl.Hs <- function(gl)
-{
-  alf <- colMeans(as.matrix(gl), na.rm = T)/2
-  out <- alf*(1-alf)*2
-  return(out)
+##' Calculate the expected heterozygosity for each loci.
+##'
+##'
+##' @title Expected Heterozygosity.
+##' @param gl a genlight object
+##' @return The expected heterozygosity for each loci as a vector.
+##' @author Bernd Gruber (bugs? Post to \url{https://groups.google.com/d/forum/dartr})
+##' @export
+gl.Hs <- function(gl) {
+  alf <- colMeans(as.matrix(gl), na.rm = TRUE)/2
+  alf*(1-alf)*2
 }
