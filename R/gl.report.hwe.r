@@ -1,23 +1,23 @@
 #' Reports departure from Hardy-Weinberg Equilibrium
-#' 
+#'
 #' Calculates the probabilities of agreement with H-W equilibrium based on observed
-#' frequencies of reference homozygotes, heterozygotes and alternate homozygotes. 
+#' frequencies of reference homozygotes, heterozygotes and alternate homozygotes.
 #' Uses the exact calculations contained in function prob.hwe() as developed by Wigginton et al. (2005).
-#' 
+#'
 #' Tests are applied to each locus across all populations pooled (subset="all"), to each locus considered within each population treated separately
 #' (subset="each") or to each locus within selected populations pooled (subset=c("pop1","pop2")). Tests for HWE are
 #' only valid if there is no population substructure (assuming random mating), and the tests have sufficient power
 #' only when there is sufficient sample size (n individuals > 20). Note also that correction for multiple comparisons is probably required
 #' if you wish to place particular importance on one or a few significant departures.
-#' 
-#' A Ternary Plot is optionally produced -- see Graffelman et al.(2008) for further details. Implementation of the Ternary Plot is via package {HardyWeinberg} 
-#' (Graffelman (2015). The plot labels loci that depart significantly from HWE as red, and those not showing significant departure as green. 
-#' Two methods are used to determine significance. ChiSquare (with correction) is traditional but involves approximations; Fisher is computationally 
+#'
+#' A Ternary Plot is optionally produced -- see Graffelman et al.(2008) for further details. Implementation of the Ternary Plot is via package {HardyWeinberg}
+#' (Graffelman (2015). The plot labels loci that depart significantly from HWE as red, and those not showing significant departure as green.
+#' Two methods are used to determine significance. ChiSquare (with correction) is traditional but involves approximations; Fisher is computationally
 #' more expensive, but applies a Fisher Exact Test of departure from HWE.
-#' 
+#'
 #' @param x -- a genlight object containing the SNP genotypes [Required]
 #' @param p -- level of significance (per locus) [Default 0.05]
-#' @param subset -- either, list populations to combine in the analysis | each | all [Default "each"] 
+#' @param subset -- either, list populations to combine in the analysis | each | all [Default "each"]
 #' @param plot -- if TRUE,  will produce a Ternary Plot(s) [default FALSE]
 #' @param method -- for determining the statistical signicance in the ternary plot: ChiSquare (with continuity correction) | Fisher [default "ChiSquare"]
 #' @param bonf -- if TRUE, Bonferroni correction will be applied to the level of significance [default TRUE]
@@ -38,48 +38,48 @@
 #' list <- gl.report.hwe(testset.gl, subset="each", plot=TRUE, bonf=FALSE)
 
 gl.report.hwe <- function(x, subset="each", plot=FALSE, method="ChiSquare", alpha=0.05, bonf=TRUE) {
-  
+
   # ERROR CHECKING
-  
+
   if(class(x)!="genlight") {
     cat("Fatal Error: genlight object required for gl.report.repavg!\n"); stop()
   }
   # Work around a bug in adegenet if genlight object is created by subsetting
   x@other$loc.metrics <- x@other$loc.metrics[1:nLoc(x),]
-  
+
   # FLAG SCRIPT START
   cat("Starting gl.report.HWE: Reporting Hardy-Weinberg Equilibrium\n")
-  
+
   # Initialize a flag to indicate if populations are to be pooled or not
   flag <- 0
-  
+
   #### Interpret options
-  
+
   if (subset[1] == "all") {
-    gl <- gl.filter.monomorphs(x,v=0)
+    gl <- gl.filter.monomorphs(x)
     if(nPop(gl) > 1) {
       cat("  Pooling all populations for HWE calculations\n")
       cat("  Warning: Significance of tests may indicate heterogeneity among populations\n\n")
     } else {
       cat("  Calculating HWE for population",popNames(gl))
-    }  
+    }
     flag <- 1
-    
+
   } else if (subset[1] == "each") {
     if (nPop(x) == 1){
       cat("  Calculating HWE for population",popNames(x))
-      gl <- gl.filter.monomorphs(x,v=0)
+      gl <- gl.filter.monomorphs(x)
       flag <- 1
     } else {
       cat("  Analysing each population separately\n")
       poplist <- seppop(x)
       flag <- 0
-    }  
-    
+    }
+
   } else if(nPop(x[pop(x) %in% subset])){
       gl <- x[pop(x) %in% subset]
       gl@other$loc.metrics <- gl@other$loc.metrics[1:nLoc(gl),] #adegenet bug
-      gl <- gl.filter.monomorphs(gl,v=0)
+      gl <- gl.filter.monomorphs(gl)
       if (nPop(gl) == 1){
         cat("  Calculating HWE for population",popNames(gl),"\n")
         flag <- 1
@@ -87,7 +87,7 @@ gl.report.hwe <- function(x, subset="each", plot=FALSE, method="ChiSquare", alph
         cat("  Pooling populations",subset,"for HWE calculations\n")
         cat("  Warning: Significance of tests may indicate heterogeneity among populations\n\n")
         flag <- 1
-      } 
+      }
 
   } else {
       cat("Fatal Error: subset parameter must be \"each\", \"all\", or a list of populations\n")
@@ -95,7 +95,7 @@ gl.report.hwe <- function(x, subset="each", plot=FALSE, method="ChiSquare", alph
     }
 
   #### Single or Pooled populations
-  
+
   if(flag == 1){
     result <- dartR:::utils.hwe(gl, prob=alpha)
     mat <- array(NA,3*dim(result)[1])
@@ -116,11 +116,11 @@ gl.report.hwe <- function(x, subset="each", plot=FALSE, method="ChiSquare", alph
       res <- HardyWeinberg::HWTernaryPlot(mat, 100, region = 7, vertex.cex = 1.25, alpha=c.alpha, signifcolour = TRUE, vbounds=TRUE, axislab=xlabel)
     } else {
       res <- HardyWeinberg::HWTernaryPlot(mat, 100, region = 2, vertex.cex = 1.25, alpha=c.alpha, signifcolour = TRUE, vbounds=TRUE, axislab=xlabel)
-    }  
-  }  
-  
+    }
+  }
+
   #### Disaggregated populations
-  
+
   if (flag == 0){
 
     # Generate the results for printout, count populations to plot
@@ -128,7 +128,7 @@ gl.report.hwe <- function(x, subset="each", plot=FALSE, method="ChiSquare", alph
     npops2plot <- nPop(x)
     for (i in poplist) {
       count <- count + 1
-      ii <- gl.filter.monomorphs(i,v=0)
+      ii <- gl.filter.monomorphs(i)
       if (nLoc(ii) == 0){
         cat("  Warning: No heteromorphic loci in population",popNames(i),"... skipped\n")
         count <- count - 1
@@ -145,9 +145,9 @@ gl.report.hwe <- function(x, subset="each", plot=FALSE, method="ChiSquare", alph
         r <- cbind(Population,r)
         result <- rbind(result, r)
       }
-    } 
-    
-    # Determine the page layout for plots based on the number of populations to plot   
+    }
+
+    # Determine the page layout for plots based on the number of populations to plot
     layout(mat = matrix(c(1,1),1,1, byrow=FALSE))
     if (npops2plot > 1){
       if (npops2plot == 2) {
@@ -166,10 +166,10 @@ gl.report.hwe <- function(x, subset="each", plot=FALSE, method="ChiSquare", alph
     } else {
       cat("  Plotting one ternary plot\n")
     }
- 
+
     # Plot the tertiary plots
     for (i in poplist) {
-      ii <- gl.filter.monomorphs(i,v=0)
+      ii <- gl.filter.monomorphs(i)
       if (nLoc(ii) == 0){
         next
       }
@@ -192,13 +192,13 @@ gl.report.hwe <- function(x, subset="each", plot=FALSE, method="ChiSquare", alph
         res <- HardyWeinberg::HWTernaryPlot(mat, 100, region = 7, vertex.cex = 1.25, alpha=c.alpha, signifcolour = TRUE, vbounds=TRUE, axislab=xlabel)
       } else {
         res <- HardyWeinberg::HWTernaryPlot(mat, 100, region = 2, vertex.cex = 1.25, alpha=c.alpha, signifcolour = TRUE, vbounds=TRUE, axislab=xlabel)
-      } 
+      }
     }
   }
   layout(mat = matrix(c(1,1),1,1, byrow=FALSE))
-  
+
   #### Report the results
-  
+
   rprob <- as.numeric(as.character(result$Prob))
   result <- result[(rprob>0 & rprob<=p),]
   result <- result[order(result$Locus),]
@@ -214,11 +214,11 @@ gl.report.hwe <- function(x, subset="each", plot=FALSE, method="ChiSquare", alph
     }
       cat("Critical values for significance of Bonferroni Corrected significance vary with sample size\n\n")
     print(result, row.names=FALSE)
-  }  
-  
+  }
+
   # CLOSE
   cat("Completed: gl.report.hwe\n")
-  
+
   # Return the result
-  return(result) 
+  return(result)
 }

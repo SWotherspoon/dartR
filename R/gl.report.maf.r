@@ -1,148 +1,50 @@
-#' Report minor allele frequency (MAF) for each locus in a genlight {adegenet} object
-#'
-#' This script provides summary histograms of MAF for each population in the dataset as a basis for decisions on filtering.
-#' 
-#' @param x -- name of the genlight object containing the SNP data [required]
-#' @param maf.limit -- show histograms maf range <= maf.limit [default 0.5]
-#' @param ind.limit -- show histograms only for populations of size greater than ind.limit [default 5]
-#' @param loc.limit -- show histograms only for populations with more than loc.limit polymorphic loci [default 30]
-#' @return NULL
-#' @export
-#' @importFrom graphics layout hist
-#' @author Arthur Georges (Post to \url{https://groups.google.com/d/forum/dartr})
-#' @examples
-#' f <- gl.report.maf(testset.gl)
+##' Report minor allele frequency (MAF) distributions.
+##'
+##' Displays histograms showing the distribution of minor allele
+##' frequency both overall, and for each population.
+##' @title Minor Allele Frequency Report
+##' @param gl a genelight object
+##' @param maf.limit the maximum MAF to show for each population
+##' @param ind.limit histograms are not produced for populations with
+##'   fewer individuals than this
+##' @importFrom graphics layout
+##' @author Arthur Georges (Post to \url{https://groups.google.com/d/forum/dartr})
+##' @export
+gl.report.maf <- function(gl, maf.limit=0.5, ind.limit=5) {
 
+  opar <- par(no.readonly=TRUE)
+  on.exit(par(opar))
 
-gl.report.maf <- function(x, maf.limit=0.5, ind.limit=5, loc.limit=30) {
-  
-  if(class(x)!="genlight") {
-    cat("Fatal Error: genlight object required for gl.drop.pop.r!\n"); stop("Execution terminated\n")
-  }
-  # Work around a bug in adegenet if genlight object is created by subsetting
-  x@other$loc.metrics <- x@other$loc.metrics[1:nLoc(x),]
-  
-  cat("Starting gl.report.maf: Minor Allele Frequency\n")
+  gl <- utils.recalc.freq(gl)
+  maf <- gl@other$loc.metrics$maf
 
-  if (maf.limit > 0.5 | maf.limit <= 0) {
-    cat("Warning: maf.limit must be in the range (0,0.5], set to 0.5\n")
-    maf.limit <- 0.5
-  }
-    
-  if (ind.limit <= 0) {
-    cat("Warning: ind.limit must be an integer > 0 and less than population size, set to 5\n")
-    ind.limit <- 5
-  }
-  
-  if (loc.limit <= 1) {
-    cat("Warning: ind.limit must be an integer > 1 and less than the the total number of loci, set to 2\n")
-    loc.limit <- 2
-  }
+  layout(matrix(c(1,1,1,2,3,4,5,6,7), 3, 3, byrow = TRUE))
+  hist(maf,
+       breaks=seq(0,0.5,0.05),
+       col=rainbow(10),
+       main="Overall",
+       xlab="Minor Allele Frequency")
 
-  layout(1,1)
-  
-# Recalculate the relevant loc.metrics
-  
-  cat("  Recalculating MAF\n")
-  x <- dartR:::utils.recalc.maf(x,v=1)
+  x <- as.matrix(gl)
+  pops <- pop(gl)
+  k <- 1
+  for(pop in levels(pops)) {
+    xp <- x[pops==pop,]
+    if(nrow(xp) < ind.limit) next
+    xp <- xp[,!(apply(xp==0L,2,all,na.rm=TRUE) | apply(xp==1L,2,all,na.rm=TRUE) | apply(xp==2L,2,all,na.rm=TRUE))]
+    freq <- .colMeans(xp,nrow(xp),ncol(xp),na.rm=TRUE)/2
+    maf <- pmin(freq,1-freq)
+    maf <- maf[maf > 1.0E-10]
 
-# Check for status -- any populations with loc > loc.limit; ind > ind.limit; and is nPop > 1
-  
-  count <- 0
-  for (popn in popNames(x)) {
-    genl <- x[pop(x)==popn]
-    genl <- gl.filter.monomorphs(genl,v=0)
-    if (nInd(genl) >= ind.limit & nLoc(genl) >= loc.limit) {
-      count <- count + 1
-      popn.hold <- popn
-    }
-  }
-  if (count > 1 ) {
-    flag <- 1
-    title.str <- "Minor Allele Frequency\nOverall"
-  }
-  if (count == 0) {
-    if (v >= 3) {cat("  No populations met minimum limits on no of individuals or loci, reporting for overall\n")}
-    title.str <- "Minor Allele Frequency\nOverall"
-    flag <- 0
-  }
-  if (count == 1) {
-    if (v >= 3) {cat("  Only one population met minimum limits on no of individuals or loci\n")}
-    title.str <- paste("Minor Allele Frequency\n",popn.hold)
-    flag <- 0
-  }  
-  if (nPop(x) == 1) {
-    flag <- 0
-    if (v >= 3) {cat("  Only one population specified\n")}
-    title.str <- paste("Minor Allele Frequency\n",pop(x)[1])
-  }
-    
-# Calculate and plot overall MAF
-  
-  cat("  Calculating MAF across populations\n")
-  maf <- x@other$loc.metrics$maf
+    if(k==7)
+      layout(matrix(c(1,2,3,4,5,6,7,8,9), 3, 3, byrow = TRUE))
 
-    if (flag == 1){
-      layout(matrix(c(1,1,1,2,3,4,5,6,7), 3, 3, byrow = TRUE))
-    }
-    hist(maf, 
-         breaks=seq(0,0.5,0.05), 
-         col=rainbow(10), 
-         main=title.str, 
-         xlab="Minor Allele Frequency")
-  
- cat("  Calculating MAF by population\n")
-  
-  plot.count <- 1
-  if (flag == 1){   
-    for (popn in popNames(x)) {
-      genl <- x[pop(x)==popn]
-      genl <- gl.filter.monomorphs(genl, v = 0)
-      if (nLoc(genl) >= loc.limit) {
-      genl <- dartR:::utils.recalc.maf(genl,v=0)
-      maf <- genl@other$loc.metrics$maf
-      
-      #cat(popn,"Pops: ",nPop(genl),"\n")
-      #cat(popn,"Inds: ",nInd(genl),"\n")
-      #cat(popn,"Locs******: ",nLoc(genl),"\n")
-    
-      if (plot.count <= 6) {
-        maf <- maf[maf<maf.limit]
-        hist(maf, 
-            breaks=seq(0,maf.limit,len=10), 
-            col=rainbow(10), 
-            main=paste(popn,"\nn =",nInd(genl)), 
-            xlab="Minor Allele Frequency",
-            xlim=c(0,maf.limit)
-        )
-        plot.count <- plot.count + 1
-      }  
-      }
-        
-      if (plot.count == 7) {
-        layout(matrix(c(1,2,3,4,5,6,7,8,9), 3, 3, byrow = TRUE))
-        cat ("  Overflow of plots across multiple pages\n") 
-      }
-        
-      if (plot.count >= 7){
-        maf <- maf[maf<maf.limit]
-        hist(maf, 
-           breaks=seq(0,maf.limit,len=10), 
-           col=rainbow(10), 
-           main=paste(popn,"\nn =",nInd(genl)), 
-           xlab="Minor Allele Frequency",
-           xlim=c(0,maf.limit)
-        )
-        plot.count <- plot.count + 1  
-      }
-    }   
+    hist(maf[maf<maf.limit],
+         breaks=seq(0,maf.limit,len=10),
+         col=rainbow(10),
+         main=paste(pop,"\nn =",nrow(xp)),
+         xlab="Minor Allele Frequency",
+         xlim=c(0,maf.limit))
+    k <- k+1
   }
-  
-  if(plot.count > 6) {
-        cat("Completed gl.report.maf once plots are displayed\n  Refer to histograms which extend over multiple screens\n\n")
-  } else {
-        cat("Completed gl.report.maf once plots are displayed\n  Refer to histograms\n\n")
-  }
-  
-  return(NULL)
-}  
+}
