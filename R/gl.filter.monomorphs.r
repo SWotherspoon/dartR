@@ -14,7 +14,7 @@
 gl.filter.monomorphs <- function (gl) {
 
   x <- as.matrix(gl)
-  keep <- !(colSums(x!=0L,na.rm=TRUE)==0 | colSums(x!=2L,na.rm=TRUE))
+  keep <- !(colSums(x!=0L,na.rm=TRUE)==0 | colSums(x!=2L,na.rm=TRUE)==0)
 
   ## Only subset if necessary
   if(!all(keep)) {
