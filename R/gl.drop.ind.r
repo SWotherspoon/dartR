@@ -3,7 +3,7 @@
 #' The script, having deleted individuals, optionally identifies resultant monomorphic loci or loci
 #' with all values missing and deletes them (using gl.filter.monomorphs.r). The script also optionally
 #' recalculates statistics made redundant by the deletion of individuals from the dataset.
-#' 
+#'
 #' The script returns a genlight object with the individuals deleted and, optionally, the recalculated locus metadata.
 #'
 #' @param x -- name of the genlight object containing SNP genotypes or a genind object containing presence/absence data [required]
@@ -18,12 +18,12 @@
 #'    gl <- gl.drop.ind(testset.gl, ind.list=c("AA019073","AA004859"))
 #' @seealso \code{\link{gl.filter.monomorphs}}
 #' @seealso \code{\link{gl.recalc.metrics}}
-#' 
+#'
 
 gl.drop.ind <- function(x, ind.list, recalc=FALSE, mono.rm=TRUE, v=2){
 
 # ERROR CHECKING
-  
+
   if(class(x)!="genlight") {
     cat("Fatal Error: genlight object required!\n"); stop("Execution terminated\n")
   }
@@ -41,36 +41,36 @@ gl.drop.ind <- function(x, ind.list, recalc=FALSE, mono.rm=TRUE, v=2){
     v <- 2
   }
 
-# FLAG SCRIPT START  
+# FLAG SCRIPT START
   if (v >= 1) {
     cat("Starting gl.drop.ind: Deleting selected individuals\n")
   }
-  
+
 # REMOVE INDIVIDUALS
-  
+
   if (v >= 2) {
     cat("Processing",class(x),"object\n")
     cat("  Deleting individuals", ind.list, "\n")
   }
 
 # Delete listed individuals, recalculate relevant locus metadata and remove monomorphic loci
-  
+
   # Remove rows flagged for deletion
     x <- x[!x$ind.names%in%ind.list]
   # Remove monomorphic loci
-    if (mono.rm) {x <- gl.filter.monomorphs(x,v=v)}
+    if (mono.rm) {x <- gl.filter.monomorphs(x)}
   # Recalculate statistics
-    if (recalc) {gl.recalc.metrics(x,v=v)}
+    if (recalc) {gl.recalc.metrics(x)}
 
 # REPORT A SUMMARY
-    
+
   if (v >= 3) {
     cat("Summary of recoded dataset\n")
     cat(paste("  No. of loci:",nLoc(x),"\n"))
     cat(paste("  No. of individuals:", nInd(x),"\n"))
     cat(paste("  No. of populations: ", length(levels(factor(pop(x)))),"\n"))
   }
-  if (v >= 2) {  
+  if (v >= 2) {
     if (!recalc) {
       cat("Note: Locus metrics not recalculated\n")
     } else {
@@ -82,14 +82,14 @@ gl.drop.ind <- function(x, ind.list, recalc=FALSE, mono.rm=TRUE, v=2){
       cat("Note: Resultant monomorphic loci deleted\n")
     }
   }
-    
+
 # FLAG SCRIPT END
-    
+
   if (v >= 1) {
     cat("Completed gl.drop.ind\n\n")
   }
-    
+
   return <- x
-  
+
 }
 

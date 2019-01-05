@@ -8,11 +8,11 @@
 #' individuals is required for preparation of figures. Caution needs to be exercised
 #' because of the potential for breaking the "chain of evidence" between the samples themselves
 #' and the analyses. Recoding individuals can be done with a recode table (csv).
-#' 
+#'
 #' The script, having deleted individuals, optionally identifies resultant monomorphic loci or loci
 #' with all values missing and deletes them (using gl.filter.monomorphs.r). The script also optionally
 #' recalculates statistics made redundant by the deletion of individuals from the dataset.
-#' 
+#'
 #' The script returns a genlight object with the new individual labels and the recalculated locus metadata.
 #'
 #' @param x -- name of the genlight object containing SNP genotypes or a genind object containing presence/absence data [required]
@@ -28,7 +28,7 @@
 #'    gl <- gl.recode.ind(testset.gl, ind.recode="testset_pop_recode.csv")
 #' }
 #' @seealso \code{\link{gl.filter.monomorphs}}
-#' 
+#'
 #'
 
 gl.recode.ind <- function(x, ind.recode, recalc=TRUE, mono.rm=TRUE, v=1){
@@ -56,16 +56,16 @@ gl.recode.ind <- function(x, ind.recode, recalc=TRUE, mono.rm=TRUE, v=1){
   indNames(x) <- ind.list
 
   # If there are individuals to be deleted, then recalculate relevant locus metadata and remove monomorphic loci
-  
+
   if ("delete" %in% x$ind.names | "Delete" %in% x$ind.names) {
     # Remove rows flagged for deletion
       cat("Deleting individuals or samples flagged for deletion\n")
       x2 <- x[!x$ind.names=="delete" & !x$ind.names=="Delete"]
     #  Remove monomorphic loci
-      if (mono.rm) {x2 <- gl.filter.monomorphs(x2,v=v)}
+      if (mono.rm) {x2 <- gl.filter.monomorphs(x2)}
       if (recalc) {
     # Recalculate statistics
-        x2 <- gl.recalc.metrics(x2,v=v)
+        x2 <- gl.recalc.metrics(x2)
       }
   } else {
     x2 <- x
@@ -80,8 +80,8 @@ gl.recode.ind <- function(x, ind.recode, recalc=TRUE, mono.rm=TRUE, v=1){
     if (!recalc) {cat("Note: Locus metrics not recalculated\n")}
     if (!mono.rm) {cat("note: Resultant monomorphic loci not deleted\n")}
   }
-  
-  if (v >= 2) {  
+
+  if (v >= 2) {
     if (!recalc) {
       cat("Note: Locus metrics not recalculated\n")
     } else {

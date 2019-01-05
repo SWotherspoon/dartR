@@ -1,15 +1,15 @@
 #' Recode population assignments in a genelight object \{adegenet\}
 #'
-#' This script recodes population assignments and/or deletes populations from a DaRT genlight SNP file 
+#' This script recodes population assignments and/or deletes populations from a DaRT genlight SNP file
 #' based on information provided in a csv population recode file.
 #'
-#' Individuals are assigned to populations based on the specimen metadata data file (csv) used with gl.read.dart(). 
+#' Individuals are assigned to populations based on the specimen metadata data file (csv) used with gl.read.dart().
 #' Recoding can be used to amalgamate populations or to selectively delete or retain populations.
 #'
 #' The population recode file contains a list of populations in the genelight object as
 #' the first column of the csv file, and the new population assignments in the second column of the csv file.
 #' The keyword Delete used as a new population assignment will result in the associated specimen being dropped from the dataset.
-#' 
+#'
 #' The script, having deleted populations, optionally identifies resultant monomorphic loci or loci
 #' with all values missing and deletes them (using gl.filter.monomorphs.r). The script also optionally
 #' recalculates the locus metadata as appropriate.
@@ -27,7 +27,7 @@
 #'    gl <- gl.recode.pop(gl, pop.recode="pop_recode_table_0.csv")
 #' }
 #' @seealso \code{\link{gl.filter.monomorphs}}
-#' 
+#'
 #'
 
 gl.recode.pop <- function(x, pop.recode, recalc=TRUE, mono.rm=TRUE, v=1){
@@ -35,7 +35,7 @@ gl.recode.pop <- function(x, pop.recode, recalc=TRUE, mono.rm=TRUE, v=1){
   if (v > 0) {
     cat("Starting gl.recode.pop: Recoding populations using lookup table",pop.recode,"\n")
   }
-  
+
   if(class(x)!="genlight") {
     cat("Fatal Error: genlight object required for gl.recode.pop.r!\n"); stop("Execution terminated\n")
   }
@@ -61,14 +61,14 @@ gl.recode.pop <- function(x, pop.recode, recalc=TRUE, mono.rm=TRUE, v=1){
 
 # Remove rows flagged for deletion
   x2 <- x[!x$pop=="delete" & !x$pop=="Delete"]
-  
+
   if (length(pop(x2))!=length(pop(x))) {
      if (v > 1) {
        cat("  Removing entities flagged for deletion in ", pop.recode, "\n")
-     }  
+     }
      # Remove monomorphic loci
-       if (mono.rm) {x2 <- gl.filter.monomorphs(x2,v=v)}
-       if (recalc) {gl.recalc.metrics(x2,v=v)}
+       if (mono.rm) {x2 <- gl.filter.monomorphs(x2)}
+       if (recalc) {gl.recalc.metrics(x2)}
  }
 
   # REPORT A SUMMARY
@@ -78,7 +78,7 @@ gl.recode.pop <- function(x, pop.recode, recalc=TRUE, mono.rm=TRUE, v=1){
     cat(paste("  No. of individuals:", nInd(x2),"\n"))
     cat(paste("  No. of populations: ", length(levels(factor(pop(x2)))),"\n"))
   }
-  if (v > 1) {  
+  if (v > 1) {
     if (!recalc) {cat("  Note: Locus metrics not recalculated\n")}
     if (!mono.rm) {cat("  Note: Resultant monomorphic loci not deleted\n")}
   }

@@ -1,27 +1,27 @@
 #' Create or edit a individual (=specimen) names and create an recode_ind file
-#' 
-#' A script to edit individual names in a genlight object, or to 
+#'
+#' A script to edit individual names in a genlight object, or to
 #' create a reassignment table taking the individual labels
 #' from a genlight object, or to edit existing individual labels in
 #' an existing recode_ind file.
-#' 
+#'
 #' Renaming individuals may be required when there have been errors in labelling arising
 #' in the process from sample to DArT files. There may be occasions where renaming
 #' individuals is required for preparation of figures. Caution needs to be exercised
 #' because of the potential for breaking the "chain of evidence" between the samples themselves
 #' and the analyses. Recoding individuals can also be done with a recode table (csv).
-#' 
+#'
 #' This script will input an existing recode table for editting and
 #' optionally save it as a new table, or if the name of an input table is not
-#' supplied, will generate a table using the individual labels in the 
+#' supplied, will generate a table using the individual labels in the
 #' parent genlight object.
-#' 
+#'
 #' The script, having deleted individuals, optionally identifies resultant monomorphic loci or loci
 #' with all values missing and deletes them (using gl.filter.monomorphs.r). The script also optionally
 #' recalculates statistics made redundant by the deletion of individuals from the dataset.
-#' 
+#'
 #' The script returns a genlight object with the new individual labels and the recalculated locus metadata.
-#' 
+#'
 #' @param gl Name of the genlight object for which individuals are to be relabelled.[required]
 #' @param ind.recode Name of the file to output the new assignments [optional]
 #' @param recalc -- Recalculate the locus metadata statistics [default TRUE]
@@ -40,8 +40,8 @@
 #' #Ammended Georges 9-Mar-17
 
 gl.edit.recode.ind <- function(gl, ind.recode=NULL, recalc=TRUE, mono.rm=TRUE, v=1) {
-  
-# Take assignments from gl  
+
+# Take assignments from gl
 
   cat("Extracting current individual labels from the gl object\n")
   recode.table <- cbind(indNames(gl),indNames(gl))
@@ -55,10 +55,10 @@ gl.edit.recode.ind <- function(gl, ind.recode=NULL, recalc=TRUE, mono.rm=TRUE, v
       cat("No output table specified, recode table not written to disk\n")
   } else {
     cat(paste("Writing individual recode table to: ",ind.recode,"\n"))
-    write.table(new, file=ind.recode, sep=",", row.names=FALSE, col.names=FALSE)    
+    write.table(new, file=ind.recode, sep=",", row.names=FALSE, col.names=FALSE)
   }
 
-# Apply the new assignments  
+# Apply the new assignments
   ind.list <- as.character(indNames(gl));
   ntr <- length(new[,1])
   for (i in 1:nInd(gl)) {
@@ -69,18 +69,18 @@ gl.edit.recode.ind <- function(gl, ind.recode=NULL, recalc=TRUE, mono.rm=TRUE, v
   # Assigning new populations to gl
   cat("Assigning new individual (=specimen) names\n")
   indNames(gl) <- ind.list
-  
+
   # If there are individuals to be deleted, then recalculate relevant locus metadata and remove monomorphic loci
-  
+
   if ("delete" %in% gl$ind.names | "Delete" %in% gl$ind.names) {
     # Remove rows flagged for deletion
     cat("Deleting individuals flagged for deletion\n")
     gl <- gl[!gl$ind.names=="delete" & !gl$ind.names=="Delete"]
     # Remove monomorphic loci
-    if(mono.rm) {gl <- gl.filter.monomorphs(gl,v=v)}
+    if(mono.rm) {gl <- gl.filter.monomorphs(gl)}
     # Recalculate statistics
     if (recalc) {
-      gl.recalc.metrics(gl,v=v)
+      gl.recalc.metrics(gl)
     }
   }
 
@@ -93,11 +93,11 @@ gl.edit.recode.ind <- function(gl, ind.recode=NULL, recalc=TRUE, mono.rm=TRUE, v
     if (!recalc) {cat("Note: Locus metrics not recalculated\n")}
     if (!mono.rm) {cat("note: Resultant monomorphic loci not deleted\n")}
   }
-  if (v>=1) {  
+  if (v>=1) {
     if (!recalc) {cat("Note: Locus metrics not recalculated\n")}
     if (!mono.rm) {cat("note: Resultant monomorphic loci not deleted\n")}
   }
-  
+
   return(gl)
-  
+
 }
