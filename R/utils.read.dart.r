@@ -1,110 +1,60 @@
-#' Import DarT data to R
-#'
-#' Internal function called by gl.read.dart
-#' @param filename path to file (csv file only currently)
-#' @param nas a character specifying NAs (default is "-")
-#' @param topskip a number specifying the number of rows to be skipped. If not provided the number of rows to be skipped are "guessed" by the number of rows with "*" at the beginning.
-#' @param lastmetric specifies the last non genetic column (Default is "RepAvg"). Be sure to check if that is true, otherwise the number of individuals will not match. You can also specify the last column by a number.
-#' @return a list of length 5. #dart format (one or two rows) #individuals, #snps, #non genetic metrics, #genetic data (still two line format, rows=snps, columns=individuals)
+##' Read DarT data in csv format.
+##'
+##' This is an internal function called by \code{gl.read.dart}.
+##' @title Import DarT data as a list.
+##' @param filename DarT data in csv format.
+##' @param na.strings strings representing NAs.
+##' @param skip number of lines before the row of column names. If \code{NULL} it is diagnosed from the file.
+##' @param last.metric the name of the last column of preceeding the genetic data
+##' @param nrows the DarT format.  If \code{NULL} it is diagnosed from the file.
+##' @return a list with elements
+##' \item{nrows}{number of rows per loci in DarT genetic data}
+##' \item{nind}{number of individuals}
+##' \item{nsnp}{number of snps}
+##' \item{covmetrics}{non-genetic metrics}
+##' \item{gendata}{genetic data}
+##' @seealso \code{\link{gl.read.dart}}
+##' @author Bernd Gruber (bugs? Post to \url{https://groups.google.com/d/forum/dartr})
+##' @export
+utils.read.dart <- function(filename,na.strings="-",skip=NULL,last.metric="RepAvg",nrows=NULL) {
 
-utils.read.dart <- function(filename, nas = "-", topskip=NULL,  lastmetric ="RepAvg"){
-  
-  if (is.null(topskip)) {
-    cat("Topskip not provided. Guessing topskip...\n")    
-    tdummy <- read.csv(filename,   na.strings=nas,  check.names=FALSE, nrows = 20, header=FALSE)
-  
-    nskip <- sum(tdummy[,1] == "*"  )
-    if (nskip > 0) { 
-      topskip <- nskip; cat(paste("Set topskip to ", nskip,". Proceeding ...\n"))
-    } else {
-      stop("Could not determine topskip (the number of rows that need to be skipped. Please provide it manually.\n") 
-    }
+  if (is.null(skip)) {
+    skip <- max(0,grep("^\\s*\\*",readLines(filename,n=20)))
+    warnings("Skipping ",skip," header rows")
+  }
+  snpraw <- read.csv(filename,na.strings=na.strings,skip=skip,check.names=FALSE)
+
+  if(is.character(last.metric)) {
+    lmet <- match(last.metric,colnames(snpraw))
+    if(is.na(lmet)) stop("Could not find last data column ", last.metric)
+  } else
+    lmet <- last.metric
+
+  ind.names <- trimws(colnames(snpraw)[(lmet+1):ncol(snpraw)],which="both")
+  if(any(duplicated(ind.names)))
+    stop("Non-unique individual identifiers")
+
+  gendata <- snpraw[,lmet+seq_len(ncol(snpraw)-lmet)]
+
+
+  ## Guess nrows if not provided
+  if (is.null(nrows)) {
+    nrows <- 3 - max(gendata, na.rm = TRUE)
+    if(nrows %in% 1:2)
+      warning("nrows not provided. Assuming ",nrows," rows")
+    else
+      stop("Could not determine nrows")
   }
 
-  snpraw <- read.csv(filename, na.strings=nas, skip = topskip, check.names=FALSE)
+  covmetrics <-  snpraw[,seq_len(lmet)]
 
-  if (is.character(lastmetric)) {
-    lmet <- which(lastmetric==names(snpraw))
-    if (length(lmet)==0)  {
-      stop (paste("Could not determine number of data columns based on", lastmetric,"!\n"))
-    }  
-  } else {
-    lmet  <- lastmetric
-  }  
-  
-  ind.names <- colnames(snpraw)[(lmet+1):ncol(snpraw) ]
-  ind.names <- trimws(ind.names, which = "both") #trim for spaces
-  if (length(ind.names)!= length(unique(ind.names))) {
-    stop("Individual names are not unique. You need to change them!\n")
-  }  
-  
-  datas <- snpraw[, (lmet+1):ncol(snpraw)]
-  
-  nrows = NULL
-  if (is.null(nrows)) {
-    cat("Trying to determine if one row or two row format...\n")
-    gnrows = 3-max(datas, na.rm = TRUE)  #if max(datas==1) then two row format, if two then one row format
-    
-    if (gnrows==1 | gnrows==2)  {
-      nrows <-gnrows
-      cat(paste("Found ", nrows , " row(s) format. Proceed...\n"))
-    } else {
-      stop("The dart format either one row or two row format. This does not seem to be the case here.\n")
-    }
-    
-  } 
-  
-  stdmetricscols <- 1:lmet
-  # 
-  # if (length(stdmetricscols) != length(stdmetrics))
-  # { cat(paste("\nCould not find all standard metrics.\n",stdmetrics[!(stdmetrics %in% names(snpraw)   )]
-  #             ," is missing.\n Carefully check the spelling of your headers!\n"))
-  #   stop()
-  # }
-  # 
-  # if (!is.null(addmetrics)) 
-  # {
-  #   addmetricscols <- which(  names(snpraw)   %in% addmetrics )
-  #   if (length(addmetricscols) != length(addmetrics))
-  #   { cat(paste("\nCould not find all additional metrics.\n",addmetrics[!(addmetrics %in% names(snpraw)   )]
-  #               ," is missing.\n Carefully check the spelling of your headers! or set addmetrics to NULL\n"))
-  #     stop()
-  #   }
-  #   stdmetricscols <- c(stdmetricscols, addmetricscols)
-  # } 
-  cat ("Added the following covmetrics:\n")
-  cat (paste(paste(names(snpraw)[stdmetricscols], collapse=" "),".\n"))
-  covmetrics <-  snpraw[,stdmetricscols]
-  
-  #####Various checks (first are there two rows per allele?
-  # we do not need cloneid any more....  
-  #covmetrics$CloneID = as.character(covmetrics$CloneID)
-  #check that there are two lines per locus...
-  #covmetrics = separate(covmetrics, CloneID, into  = c("clid","clrest"),sep = "\\|", extra="merge")
-  
-  #covmetrics$AlleleID = as.character(covmetrics$AlleleID)
-  
-  #check that there are two lines per locus...
-  #covmetrics = separate(covmetrics, AlleleID, into  = c("allid","alrest"),sep = "\\|", extra="merge")
-  covmetrics$clone <- (sub("\\|.*","",covmetrics$AlleleID, perl=T))
-  spp <- ( sub(".+-+(\\d{1,3}):.+","\\1",covmetrics$AlleleID))
-  
-  
-  #### find uid within allelid 
-  covmetrics$uid <- paste(covmetrics$clone, spp,sep="-")
-  ### there should be only twos (and maybe fours)
-  tt <- table(table(covmetrics$uid) )
-  cat(paste("Number of rows per Clone. Should be only ", nrows,"s:", names(tt),"\n "))
-  if (nrows!=as.numeric(names(tt))) {
-    cat("!!!!!Number of rows per clone does not fit with nrow format. Most likely your data are not read in correctly.!!!!!\n") 
-  }  
-  nind <- ncol(datas)
+  clone <- sub("\\|.*","",covmetrics$AlleleID)
+  spp <- sub("[^-]+-+(\\d{1,3}):.+","\\1",covmetrics$AlleleID)
+
+  covmetrics$clone <- factor(clone)
+  covmetrics$uid <- factor(paste(clone, spp,sep="-"))
+  nind <- ncol(gendata)
   nsnp <- nrow(covmetrics)/nrows
-  
-  cat(paste("Recognised:", nind, "individuals and",nsnp," SNPs in a",nrows,"row format using", filename,"\n"))
-  
-  out <- list(nrows=nrows, nind=nind, nsnp=nsnp, covmetrics= covmetrics, gendata =datas)
-  
-  out
-  
+
+  list(nrows=nrows,nind=nind,nsnp=nsnp,covmetrics=covmetrics,gendata=gendata)
 }
