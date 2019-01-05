@@ -2,34 +2,34 @@
 #'
 #' This script assigns an individual of unknown provenance to one or more target populations based on first, an analysis
 #' of private alleles, and then, if the assignment remains ambigous, on the basis of a weighted likelihood index.
-#' 
-#' The algorithm first identifies those target populations for which the individual has no private alleles. If no single 
+#'
+#' The algorithm first identifies those target populations for which the individual has no private alleles. If no single
 #' population emerges from this analysis, or if a higher threshold than 0 is chosen for the number of tollerable private
 #' alleles, then the following process is followed.
 #' (a) The space defined by the loci is ordinated to yield a series of orthogonal axes (independent), a necessary condition
 #' for combining likelihoods calculated from each axis.
 #' (b) A workable subset of dimensions is chosen, normally equal to the number of target populations or the number of dimensions
-#' with substantive eigenvalues, whichever is the smaller. 
-#' (c) The log-likelihood of the value for the unknown on each axis is calculated, weighted by the eigenvalue for that axis, 
+#' with substantive eigenvalues, whichever is the smaller.
+#' (c) The log-likelihood of the value for the unknown on each axis is calculated, weighted by the eigenvalue for that axis,
 #' and summed over all dimensions as an assignment index. The assignment index is calculated for a point on the boundary of
 #' the 95% (or as specified) confidence envelope.
-#' 
+#'
 #' There are three considerations to the assignment. First, consider only those populations for which the unknown has no
 #' private alleles. Private alleles are an indication that the unknown does not belong to a target population (provided that
-#' the sample size is adequate, say >=10). 
-#' 
+#' the sample size is adequate, say >=10).
+#'
 #' Second, consider the PCoA plot for populations where no private alleles have been
-#' detected and the position of the unknown in relation to the confidence ellipses. Note, this is considering only the 
-#' top two dimensions of the ordination, and so an unknown lying outside the confidence ellipse can be interpreted as it lying 
+#' detected and the position of the unknown in relation to the confidence ellipses. Note, this is considering only the
+#' top two dimensions of the ordination, and so an unknown lying outside the confidence ellipse can be interpreted as it lying
 #' outside the confidence envelope. However, if the unknown lies inside the confidence ellipse in two dimensions, then it may still lie outside
 #' the confidence envelope. This is good for eliminating populations from consideration, but does not provide confidence in
-#' assignment. 
-#' 
+#' assignment.
+#'
 #' Third, consider the assignment probabilities. This approach calculates the squared Generalised Linear Distance (Mahalanobis
 #' distance) of the unknown from the centroid for each population, and calculates the probability associated with its quantile
-#' under the zero truncated normal distribution. This index takes into account position of the unknown in relation to the 
+#' under the zero truncated normal distribution. This index takes into account position of the unknown in relation to the
 #' confidence envelope in all selected dimensions of the ordination.
-#' 
+#'
 #' Each of these approaches provides evidence, none are 100% definitive. They need to be interpreted cautiously.
 #'
 #' @param x -- name of the input genlight object [required]
@@ -46,16 +46,16 @@
 #' @examples
 #' # Test run with a focal individual from the Macleay River (EmmacMaclGeor)
 #' x <- gl.assign(testset.gl, id="UC_00146", nmin=10, alpha=0.05, threshold=1)
-#' 
+#'
 
 gl.assign <- function (x, id, nmin=10, dim=NULL, alpha= 0.05, threshold=0, v=3) {
-  
+
   # ERROR CHECKING
-  
+
   if(class(x)!="genlight") {
     cat("Fatal Error: genlight object required!\n"); stop("Execution terminated\n")
   }
-  
+
   alpha <- 1-alpha
 
   if(class(x)!="genlight") {
@@ -73,7 +73,7 @@ gl.assign <- function (x, id, nmin=10, dim=NULL, alpha= 0.05, threshold=0, v=3) 
     if(dim < 1) {
       cat("Warning: Value of dim must be greater than zero, set to NULL\n");
       dim <- NULL
-    }  
+    }
   }
   if (threshold < 0) {
     cat("Warning: Threshold value cannot be negative, set to 0\n")
@@ -83,12 +83,12 @@ gl.assign <- function (x, id, nmin=10, dim=NULL, alpha= 0.05, threshold=0, v=3) 
     cat("    Warning: verbosity must be an integer between 0 [silent] and 5 [full report], set to 2\n")
     v <- 2
   }
-  
-  # FLAG SCRIPT START  
+
+  # FLAG SCRIPT START
   if (v >= 1) {
     cat("Starting gl.assign: Assign and individual to a population\n\n")
   }
-  
+
 # Identify populations that can be eliminated on the basis of private alleles
 # Retain the remainder for analysis
   x2 <- gl.report.pa(x, id=id, nmin=nmin, threshold=threshold, v=v)
@@ -104,10 +104,10 @@ gl.assign <- function (x, id, nmin=10, dim=NULL, alpha= 0.05, threshold=0, v=3) 
   }
   cat("\n\nCOMPUTING ASSIGNMENT BASED ON CONFIDENCE ENVELOPES\n\n")
 # Ordinate a reduced space of K = nPop(x2) dimensions
-  pcoa <- gl.pcoa(x2, nfactors=nPop(x2),v=FALSE)
+  pcoa <- gl.pcoa(x2, nfactors=nPop(x2))
 
 #  gl.pcoa.plot(pcoa,x2, xaxis=3, yaxis=4, ellipse=TRUE)
-  
+
 # Determine the number of dimensions for confidence envelope (the ordination and dimension reduction)
   # From the eigenvalue distribution
     s <- sum(pcoa$eig)
@@ -125,7 +125,7 @@ gl.assign <- function (x, id, nmin=10, dim=NULL, alpha= 0.05, threshold=0, v=3) 
       cat("  User specified dimensions to retain: Not specified\n")
     } else {
       cat("  User specified dimensions to retain:",dim,"\n")
-    }  
+    }
     dim <- min(first.est, sec.est, third.est, dim)
     cat("    Dimension of confidence envelope set at",dim,"\n")
 
@@ -133,8 +133,8 @@ gl.assign <- function (x, id, nmin=10, dim=NULL, alpha= 0.05, threshold=0, v=3) 
     pcoa <- gl.pcoa(x2, nfactors=dim)
 
 # Plot the PCoA
-    suppressMessages(print(gl.pcoa.plot(pcoa,x2, xaxis=1, yaxis=2, ellipse=TRUE, p=alpha)))
-# Add population names to the scores   
+    suppressMessages(print(gl.pcoa.plot(pcoa,x2, xaxis=1, yaxis=2, ellipse=TRUE, level=alpha)))
+# Add population names to the scores
   c <- cbind(pcoa$scores,as.character(pop(x2)))
   colnames(c)[dim+1]<- "pop"
 
@@ -142,9 +142,9 @@ gl.assign <- function (x, id, nmin=10, dim=NULL, alpha= 0.05, threshold=0, v=3) 
   clouds <- c[c[,"pop"]!="unknown",]
   unknown <- c[c[,"pop"]=="unknown",]
   unknown <- as.numeric(unknown[1:dim])
-  
 
-  cat("\nLikelihood Index for assignment of unknown",id,"to listed populations\n\n") 
+
+  cat("\nLikelihood Index for assignment of unknown",id,"to listed populations\n\n")
 # For each population
   p <- as.factor(clouds[,"pop"])
   for (i in 1:length(levels(p))) {
@@ -182,7 +182,7 @@ gl.assign <- function (x, id, nmin=10, dim=NULL, alpha= 0.05, threshold=0, v=3) 
       } else {
         df <- rbind(df,tmp)
       }
-  }  
+  }
   colnames(df) <- c("Population","Index","CE","Assign")
   df <- df[rev(order(df$Index)),]
   print(df)
@@ -190,7 +190,7 @@ gl.assign <- function (x, id, nmin=10, dim=NULL, alpha= 0.05, threshold=0, v=3) 
   cat("  Index is a weighted log-likelihood\n")
   cat("  CE is the value of the Index on the boundary of the",alpha*100,"% confidence envelope\n")
   cat("  Best assignment is the population with the largest value of the Index, in this case",best,"\n\n")
-  
+
   if (v >= 1) {
     cat("Completed gl.assign\n\n")
   }
