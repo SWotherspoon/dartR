@@ -123,10 +123,7 @@ gl.fixed.diff <- function(x, tloc=0, test=FALSE, delta=0.02, reps=1000, rm.globa
           p1 <- ftable[ftable$popn==levels(pop(x))[popi],]
           p2 <- ftable[ftable$popn==levels(pop(x))[popj],]
         # Calculate fixed differences
-          fixed <- c(rep(0,nloci))
-          for (i in 1:nloci) {       # For each locus
-            fixed[i] <- is.fixed(p1$frequency[i],p2$frequency[i],tloc=tloc)
-          }
+        fixed <- is.fixed(p1$frequency,p2$frequency,tloc=tloc)
         # Calculate stats across loci
           fixed.matrix[popi,popj] <- sum(fixed, na.rm=TRUE)
           loc.count.matrix[popi,popj] <- sum(!is.na(fixed))
