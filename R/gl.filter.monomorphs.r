@@ -5,6 +5,7 @@
 ##' option in gl.pop.recode(). Retaining monomorphic loci
 ##' unnecessarily increases the size of the dataset.
 ##'
+##' @title Filter Monomorphs
 ##' @param gl a genlight object
 ##' @return A genlight object with monomorphic loci removed
 ##' @author Arthur Georges (Post to \url{https://groups.google.com/d/forum/dartr})
