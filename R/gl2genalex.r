@@ -9,12 +9,12 @@
 #' @param outfile -- file name of the output file (including extension).
 #' @param outpath -- path where to save the output file [default tempdir()]
 #' @param v -- verbosity: 0, silent or fatal errors; 1, begin and end; 2, progress log ; 3, progress and results summary; 5, full report [default 2]
-#' @import from poppr genind2genalex
+#' @importFrom poppr genind2genalex
 #' @return NULL
 #' @export
 #' @author Katrin Hohwieler (Post to \url{https://groups.google.com/d/forum/dartr})
 #' @examples
-#' gl2genalex(testset.gl,outfile="testset.csv)
+#' gl2genalex(testset.gl,outfile="testset.csv")
 
 gl2genalex <- function(x, outfile="genaxex.csv", outpath=tempdir(), v=2) {
 
@@ -34,7 +34,7 @@ gl2genalex <- function(x, outfile="genaxex.csv", outpath=tempdir(), v=2) {
   if (v > 0) {cat(paste("Starting gl2genalex: Create genalex input file\n\n"))}
 
   gind <- gl2gi(x)
-  poppr::genind2genalex(gind, filename = outfile, sequence = TRUE, overwrite = FALSE)
+  genind2genalex(gind, filename = outfile, sequence = TRUE, overwrite = FALSE)
 
 
   if (v > 2) {cat(paste("    Records written to",outfile,":",nInd(x),"\n"))}

@@ -1,7 +1,8 @@
 ##' Import DarT data into R and convert it to a genlight object.
 ##'
-##' This function is a wrapper for \code{\link{read.dart}} and
-##' \code{\link{dart2genlight}} that converts a dart file into a genlight object in one step.
+##' This function is a wrapper for \code{\link{utils.read.dart}} and
+##' \code{\link{utils.dart2genlight}} that converts a dart file into a
+##' genlight object in one step.
 ##'
 ##' The file of individual covariates is searched for the columns
 ##' \describe{
@@ -22,7 +23,7 @@
 ##' @param last.metric the name of the last column of preceeding the genetic data
 ##' @param nrows the DarT format.  If \code{NULL} it is diagnosed from the file.
 ##' @return A genlight object.
-##' @seealso \code{\link{read.dart}}, \code{\link{dart2genlight}}
+##' @seealso \code{\link{utils.read.dart}}, \code{\link{utils.dart2genlight}}
 ##' @author Bernd Gruber (bugs? Post to \url{https://groups.google.com/d/forum/dartr})
 ##' @export
 gl.read.dart <- function(filename, ind.metafile=NULL, na.strings = "-", skip=NULL, last.metric="RepAvg",nrows=NULL) {

@@ -113,9 +113,9 @@ gl.report.hwe <- function(x, subset="each", plot=FALSE, method="ChiSquare", alph
       xlabel <- paste0(method," (alpha = ",signif(c.alpha,4),")")
     }
     if (method == "Fisher"){
-      res <- HardyWeinberg::HWTernaryPlot(mat, 100, region = 7, vertex.cex = 1.25, alpha=c.alpha, signifcolour = TRUE, vbounds=TRUE, axislab=xlabel)
+      res <- HWTernaryPlot(mat, 100, region = 7, vertex.cex = 1.25, alpha=c.alpha, signifcolour = TRUE, vbounds=TRUE, axislab=xlabel)
     } else {
-      res <- HardyWeinberg::HWTernaryPlot(mat, 100, region = 2, vertex.cex = 1.25, alpha=c.alpha, signifcolour = TRUE, vbounds=TRUE, axislab=xlabel)
+      res <- HWTernaryPlot(mat, 100, region = 2, vertex.cex = 1.25, alpha=c.alpha, signifcolour = TRUE, vbounds=TRUE, axislab=xlabel)
     }
   }
 
@@ -189,9 +189,9 @@ gl.report.hwe <- function(x, subset="each", plot=FALSE, method="ChiSquare", alph
         xlabel <- paste0("Population: ",popNames(i)[1])
       }
       if (method == "Fisher"){
-        res <- HardyWeinberg::HWTernaryPlot(mat, 100, region = 7, vertex.cex = 1.25, alpha=c.alpha, signifcolour = TRUE, vbounds=TRUE, axislab=xlabel)
+        res <- HWTernaryPlot(mat, 100, region = 7, vertex.cex = 1.25, alpha=c.alpha, signifcolour = TRUE, vbounds=TRUE, axislab=xlabel)
       } else {
-        res <- HardyWeinberg::HWTernaryPlot(mat, 100, region = 2, vertex.cex = 1.25, alpha=c.alpha, signifcolour = TRUE, vbounds=TRUE, axislab=xlabel)
+        res <- HWTernaryPlot(mat, 100, region = 2, vertex.cex = 1.25, alpha=c.alpha, signifcolour = TRUE, vbounds=TRUE, axislab=xlabel)
       }
     }
   }

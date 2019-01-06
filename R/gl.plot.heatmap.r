@@ -1,4 +1,4 @@
-#' Represent a distance matrix as a heatmap 
+#' Represent a distance matrix as a heatmap
 #'
 #' The script plots a heat map to represent the distances in the distance or dissimilarity matrix
 #'
@@ -11,7 +11,7 @@
 #' @param legend -- if TRUE, a legend will be added to the plot [default = TRUE]
 #' @param rank -- if TRUE, then the distance matrix will be reordered to group like with like, otherwise order will be displayed as given [default FALSE]
 #' @param v -- verbosity: 0, silent or fatal errors; 1, begin and end; 2, progress log ; 3, progress and results summary; 5, full report [default 2]
-#' @import graphics
+#' @importFrom graphics image plot.new legend
 #' @importFrom stats dist
 #' @importFrom grDevices heat.colors
 #' @return NULL
@@ -24,9 +24,9 @@
 #'    gl.plot.heatmap(d, ncolors=10, rank=TRUE, legend=TRUE)
 
 gl.plot.heatmap <- function(D, ncolors=5, labels=TRUE, labels.cex=1, values=TRUE, values.cex=1, legend=TRUE, rank=FALSE, v=2){
-  
+
 # ERROR CHECKING
-  
+
   if(class(D)!="dist") {
     cat("Fatal Error: distance matrix required!\n"); stop("Execution terminated\n")
   }
@@ -35,35 +35,35 @@ gl.plot.heatmap <- function(D, ncolors=5, labels=TRUE, labels.cex=1, values=TRUE
     cat("    Warning: verbosity must be an integer between 0 [silent] and 5 [full report], set to 2\n")
     v <- 2
   }
-  
+
   if (ncolors < 0){
     cat("    Warning: ncolors must be a positive integer, set to 5\n")
     ncolors <- 5
   }
   ncolors <- ncolors + 1 # to account for zero = white.
-  
+
   if (max(D) == 0) {
     cat("    Warning: matrix contains no nonzero distances\n")
-  } 
-  
+  }
+
 # FLAG SCRIPT START
-  
+
   if (v >= 1) {
     cat("Starting gl.plot.heatmap: Displaying distance matrix\n")
   }
-  
+
 # DO THE JOB
-  
+
   # Convert the distance matrix to a numeric matrix
   x <- as.matrix(D) # Note converts to a full matrix, upper and lower
   #x <- x[1:10,1:10]
   dim <- ncol(x)
-  
+
   # If the matrix is to be ordered on rank
   if(rank){
     x <- x[order(rowMeans(x),decreasing=TRUE),order(colMeans(x),decreasing=TRUE)]
   }
-  
+
   # Check if labels and values can be plotted
   if (dim >= 30){
     if (labels){
@@ -75,20 +75,20 @@ gl.plot.heatmap <- function(D, ncolors=5, labels=TRUE, labels.cex=1, values=TRUE
       #values=FALSE
     }
   }
-  
+
   # Hold the raw values
   vals <- x
-  
+
   # Scale the values to fall between 0 and 1
   if (max(x) > 0){
     x <- 1-x/max(x)
   }
-  
-  # Invert the matrix so the diagonal runs top left to bottom right
-  x <- apply(x, 2, rev) 
-  vals <- apply(vals,2,rev) 
 
-  # Plot the heat map  
+  # Invert the matrix so the diagonal runs top left to bottom right
+  x <- apply(x, 2, rev)
+  vals <- apply(vals,2,rev)
+
+  # Plot the heat map
   #par(pty="s",mar=c(0,0,0,11),xpd=T)
   layout(matrix(c(1,2), 1, 2, byrow = TRUE),widths=c(0.85,0.15))
   par(mai=c(2,2,0,0),pty="s",xpd=T)
@@ -100,13 +100,13 @@ gl.plot.heatmap <- function(D, ncolors=5, labels=TRUE, labels.cex=1, values=TRUE
   if (labels) {
     axis(1, 1:dim, row.names(x), cex.axis=labels.cex, las=3)
     axis(2, 1:dim, colnames(x), cex.axis=labels.cex, las=1)
-  } 
+  }
 
   # Add the values
   if (values) {
     text(expand.grid(1:dim, 1:dim), sprintf("%0.1f", vals), cex=values.cex)
-  }  
-  
+  }
+
   # Add the legend
   if (legend) {
     par(mai=c(0.2,0,0.5,0.1),pty="m",xpd=F)
@@ -121,14 +121,14 @@ gl.plot.heatmap <- function(D, ncolors=5, labels=TRUE, labels.cex=1, values=TRUE
     }
     #legend(x=10.7,y=10,legend=s, fill=rev(colours), title="Distance")
     legend("topright",legend=s, fill=rev(colours), title="Distance", cex=0.7)
-  }  
+  }
 
   # FLAG SCRIPT END
-  
+
   if (v >= 1) {
     cat("Completed gl.plot.heatmap\n\n")
   }
-  
+
   return()
 
 }
