@@ -2,18 +2,18 @@
 % Please edit documentation in R/gl.Hs.r
 \name{gl.Hs}
 \alias{gl.Hs}
-\title{A very simple function to report expected Heterozygosity}
+\title{Expected Heterozygosity.}
 \usage{
 gl.Hs(gl)
 }
 \arguments{
-\item{gl}{-- a genlight object}
+\item{gl}{a genlight object}
 }
 \value{
-a simple vector wiht Ho for each loci
+The expected heterozygosity for each loci as a vector.
 }
 \description{
-A very simple function to report expected Heterozygosity
+Calculate the expected heterozygosity for each loci.
 }
 \author{
 Bernd Gruber (bugs? Post to \url{https://groups.google.com/d/forum/dartr})

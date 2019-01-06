@@ -21,11 +21,11 @@ gl.recode.pop(x, pop.recode, recalc = TRUE, mono.rm = TRUE, v = 1)
 A genlight object with the recoded and reduced data
 }
 \description{
-This script recodes population assignments and/or deletes populations from a DaRT genlight SNP file 
+This script recodes population assignments and/or deletes populations from a DaRT genlight SNP file
 based on information provided in a csv population recode file.
 }
 \details{
-Individuals are assigned to populations based on the specimen metadata data file (csv) used with gl.read.dart(). 
+Individuals are assigned to populations based on the specimen metadata data file (csv) used with gl.read.dart().
 Recoding can be used to amalgamate populations or to selectively delete or retain populations.
 
 The population recode file contains a list of populations in the genelight object as

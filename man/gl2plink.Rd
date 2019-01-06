@@ -2,23 +2,22 @@
 % Please edit documentation in R/gl2plink.r
 \name{gl2plink}
 \alias{gl2plink}
-\title{Converts a genlight object to plink file format}
+\title{Convert Genlight to Plink}
 \usage{
-gl2plink(x, outfile = "plink.csv", outpath = tempdir())
+gl2plink(gl, file = "plink.csv")
 }
 \arguments{
-\item{x}{-- genlight object}
+\item{gl}{a genlight object.}
 
-\item{outfile}{-- name (path) of the output plink file [default plink.csv]}
-
-\item{outpath}{-- path of the output file. Default is to tempdir(). If to be saved in the current working directory change to "."}
+\item{file}{file or connection to write to.}
+}
+\value{
+Returns an object of class \code{snp} to be used with \pkg{SNPassoc}.
 }
 \description{
-This function exports a genlight object into plink format and save it into a file
-}
-\examples{
-gl2plink(testset.gl)
+Converts a genlight object to plink format and writes it to a file
+or connection.
 }
 \author{
-Bernd Guber (glbugs@aerg.canberra.edu.au)
+Bernd Gruber (bugs? Post to \url{https://groups.google.com/d/forum/dartr})
 }

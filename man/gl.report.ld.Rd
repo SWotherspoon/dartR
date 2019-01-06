@@ -18,7 +18,8 @@ gl.report.ld(gi, name = NULL, save = TRUE, nchunks = 2, ncores = 1,
 
 \item{ncores}{how many cores should be used}
 
-\item{chunkname}{the name of the chunks for saving, default is NULL}
+\item{chunkname}{the name of the chunks for saving [default is NULL]
+probar if TRUE, a progress bar is displayed for long loops [default = TRUE]}
 }
 \value{
 returns calculation of pairwise LD across all loci between subpopulation. This functions uses if specified many cores on your computer to speed up. And if save is used can restart (if save=TRUE is used) with the same command starting where it crashed. The final output is a data frame that holds all statistics of pairwise LD between loci. (See ?LD in package genetics for details).
@@ -27,5 +28,5 @@ returns calculation of pairwise LD across all loci between subpopulation. This f
 this function is implemented in a parallel fashion to speed up the process. There is also the ability to restart the function if crashed by specifying the chunkfile names or restarting the function exactly in the same way as in the first run. This is implemented as sometimes due to connectivity loss between cores the function my crash half way. Also remove loci with have only missing value before running the function.
 }
 \author{
-Bernd Gruber (bugs? Post to \url{https://groups.google.com/d/forum/dartr})
+Bernd Gruber (Post to \url{https://groups.google.com/d/forum/dartr})
 }

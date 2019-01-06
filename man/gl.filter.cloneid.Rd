@@ -2,20 +2,19 @@
 % Please edit documentation in R/gl.filter.cloneid.r
 \name{gl.filter.cloneid}
 \alias{gl.filter.cloneid}
-\title{Filter for CloneID to select only unique SNPs}
+\title{Filter Clones}
 \usage{
 gl.filter.cloneid(gl)
 }
 \arguments{
-\item{gl}{a genlight object created via read.dart (needs to have a cloneID as provided by dart)}
+\item{gl}{a genlight object}
 }
 \value{
-filtered genlight object, with unique cloneIDs
+A genlight object containing only unique clones.
 }
 \description{
-Filter for CloneID to select only unique SNPs
+Filter to select only one instance of each clone.
 }
-\examples{
-{
-}
+\author{
+Bernd Gruber (bugs? Post to \url{https://groups.google.com/d/forum/dartr})
 }

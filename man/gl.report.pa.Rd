@@ -18,7 +18,7 @@ gl.report.pa(x, id, nmin = 10, threshold = 0, v = 2)
 \item{v}{-- verbosity: 0, silent or fatal errors; 1, begin and end; 2, progress log ; 3, progress and results summary; 5, full report [default 2]}
 }
 \value{
-A genlight object containing the focal individual (assigned to population "unknown") and 
+A genlight object containing the focal individual (assigned to population "unknown") and
 populations for which the focal individual is not distinctive (number of loci with private alleles less than or equal to thresold t.
 }
 \description{

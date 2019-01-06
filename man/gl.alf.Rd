@@ -2,20 +2,21 @@
 % Please edit documentation in R/gl.alf.r
 \name{gl.alf}
 \alias{gl.alf}
-\title{Calculates allele frequency of the first and second allele for each loci #' 
-A very simple function to report allele frequencies}
+\title{Allelle Frequency}
 \usage{
 gl.alf(gl)
 }
 \arguments{
-\item{gl}{-- a genlight object}
+\item{gl}{a genlight object}
 }
 \value{
-a simple data.frame with alf1, alf2
+A dataframe with columns
+\item{\code{alf1}}{frequency of the reference allele for each loci}
+\item{\code{alf2}}{frequency of the reference allele for each loci}, alf2
 }
 \description{
-Calculates allele frequency of the first and second allele for each loci #' 
-A very simple function to report allele frequencies
+Calculates allele frequencies of the first and second allele for
+each loci.
 }
 \author{
 Bernd Gruber (bugs? Post to \url{https://groups.google.com/d/forum/dartr})

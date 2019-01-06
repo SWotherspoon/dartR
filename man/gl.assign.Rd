@@ -30,14 +30,14 @@ This script assigns an individual of unknown provenance to one or more target po
 of private alleles, and then, if the assignment remains ambigous, on the basis of a weighted likelihood index.
 }
 \details{
-The algorithm first identifies those target populations for which the individual has no private alleles. If no single 
+The algorithm first identifies those target populations for which the individual has no private alleles. If no single
 population emerges from this analysis, or if a higher threshold than 0 is chosen for the number of tollerable private
 alleles, then the following process is followed.
 (a) The space defined by the loci is ordinated to yield a series of orthogonal axes (independent), a necessary condition
 for combining likelihoods calculated from each axis.
 (b) A workable subset of dimensions is chosen, normally equal to the number of target populations or the number of dimensions
-with substantive eigenvalues, whichever is the smaller. 
-(c) The log-likelihood of the value for the unknown on each axis is calculated, weighted by the eigenvalue for that axis, 
+with substantive eigenvalues, whichever is the smaller.
+(c) The log-likelihood of the value for the unknown on each axis is calculated, weighted by the eigenvalue for that axis,
 and summed over all dimensions as an assignment index. The assignment index is calculated for a point on the boundary of
 the 95% (or as specified) confidence envelope.
 
@@ -46,15 +46,15 @@ private alleles. Private alleles are an indication that the unknown does not bel
 the sample size is adequate, say >=10).
 
 Second, consider the PCoA plot for populations where no private alleles have been
-detected and the position of the unknown in relation to the confidence ellipses. Note, this is considering only the 
-top two dimensions of the ordination, and so an unknown lying outside the confidence ellipse can be interpreted as it lying 
+detected and the position of the unknown in relation to the confidence ellipses. Note, this is considering only the
+top two dimensions of the ordination, and so an unknown lying outside the confidence ellipse can be interpreted as it lying
 outside the confidence envelope. However, if the unknown lies inside the confidence ellipse in two dimensions, then it may still lie outside
 the confidence envelope. This is good for eliminating populations from consideration, but does not provide confidence in
 assignment.
 
 Third, consider the assignment probabilities. This approach calculates the squared Generalised Linear Distance (Mahalanobis
 distance) of the unknown from the centroid for each population, and calculates the probability associated with its quantile
-under the zero truncated normal distribution. This index takes into account position of the unknown in relation to the 
+under the zero truncated normal distribution. This index takes into account position of the unknown in relation to the
 confidence envelope in all selected dimensions of the ordination.
 
 Each of these approaches provides evidence, none are 100% definitive. They need to be interpreted cautiously.

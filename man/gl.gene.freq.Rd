@@ -2,12 +2,7 @@
 % Please edit documentation in R/gl.gene.freq.r
 \name{gl.gene.freq}
 \alias{gl.gene.freq}
-\title{Calculate a statistic for each locus by group
- 
- An internal function essentially to convey readability to rather contorted R code.
- It takes as input a genlight \{adegenet\} object with an index variable (say, population)
- and calculates the selected statistic for each locus, broken down by the groups defined
- by the index variable.}
+\title{Calculate a statistic for each locus by group}
 \usage{
 gl.gene.freq(gl, method = pop(gl), stat = "mean")
 }
@@ -22,15 +17,13 @@ gl.gene.freq(gl, method = pop(gl), stat = "mean")
 A matrix, populations (rows) by loci (columns), showing the statistic [mean/2]
 }
 \description{
-Calculate a statistic for each locus by group
- 
- An internal function essentially to convey readability to rather contorted R code.
+An internal function essentially to convey readability to rather contorted R code.
  It takes as input a genlight \{adegenet\} object with an index variable (say, population)
  and calculates the selected statistic for each locus, broken down by the groups defined
  by the index variable.
 }
 \examples{
-#result <- dartR:::gl.gene.freq(testset.gl, method=pop(gl), stat="mean")
+#result <- gl.gene.freq(testset.gl, method=pop(gl), stat="mean")
 }
 \author{
 Arthur Georges (Post to \url{https://groups.google.com/d/forum/dartr})

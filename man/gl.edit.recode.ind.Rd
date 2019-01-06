@@ -22,7 +22,7 @@ gl.edit.recode.ind(gl, ind.recode = NULL, recalc = TRUE,
 An object of class ("genlight") with the revised individual labels
 }
 \description{
-A script to edit individual names in a genlight object, or to 
+A script to edit individual names in a genlight object, or to
 create a reassignment table taking the individual labels
 from a genlight object, or to edit existing individual labels in
 an existing recode_ind file.
@@ -36,7 +36,7 @@ and the analyses. Recoding individuals can also be done with a recode table (csv
 
 This script will input an existing recode table for editting and
 optionally save it as a new table, or if the name of an input table is not
-supplied, will generate a table using the individual labels in the 
+supplied, will generate a table using the individual labels in the
 parent genlight object.
 
 The script, having deleted individuals, optionally identifies resultant monomorphic loci or loci

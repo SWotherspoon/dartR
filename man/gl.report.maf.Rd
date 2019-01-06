@@ -2,27 +2,24 @@
 % Please edit documentation in R/gl.report.maf.r
 \name{gl.report.maf}
 \alias{gl.report.maf}
-\title{Report minor allele frequency (MAF) for each locus in a genlight {adegenet} object}
+\title{Minor Allele Frequency Report}
 \usage{
-gl.report.maf(x, maf.limit = 0.5, ind.limit = 5, loc.limit = 30,
-  v = 2)
+gl.report.maf(gl, maf.limit = 0.5, ind.limit = 5)
 }
 \arguments{
-\item{x}{-- name of the genlight object containing the SNP data [required]}
+\item{gl}{a genelight object}
 
-\item{maf.limit}{-- show histograms maf range <= maf.limit [default 0.5]}
+\item{maf.limit}{the maximum MAF to show for each population}
 
-\item{ind.limit}{-- show histograms only for populations of size greater than ind.limit [default 5]}
-
-\item{loc.limit}{-- show histograms only for populations with more than loc.limit polymorphic loci [default 30]}
-
-\item{v}{-- verbosity: 0, silent or fatal errors; 1, begin and end; 2, progress log ; 3, progress and results summary; 5, full report [default 2]}
+\item{ind.limit}{histograms are not produced for populations with
+fewer individuals than this}
 }
 \description{
-Summary of minor allele frequencies across loci is reported as histograms.
+Report minor allele frequency (MAF) distributions.
 }
-\examples{
-f <- gl.report.maf(testset.gl)
+\details{
+Displays histograms showing the distribution of minor allele
+frequency both overall, and for each population.
 }
 \author{
 Arthur Georges (Post to \url{https://groups.google.com/d/forum/dartr})

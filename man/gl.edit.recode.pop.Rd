@@ -22,7 +22,7 @@ gl.edit.recode.pop(gl, pop.recode = NULL, recalc = FALSE,
 An object of class ("genlight") with the revised population assignments
 }
 \description{
-A script to edit population assignments in a genlight object, or to 
+A script to edit population assignments in a genlight object, or to
 create a reassignment table taking the population assignments
 from a genlight object, or to edit existing population assignments in
 a pop.recode.table.
@@ -37,7 +37,7 @@ column provides the new assignment.
 
 This script will input an existing reassignment table for editting and
 optionally save it as a new table, or if the name of an input table is not
-supplied, will generate a table using the population assignments in the 
+supplied, will generate a table using the population assignments in the
 parent genlight object.
 
 The script, having deleted populations, optionally identifies resultant monomorphic loci or loci

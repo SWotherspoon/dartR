@@ -2,23 +2,21 @@
 % Please edit documentation in R/gl.filter.maf.r
 \name{gl.filter.maf}
 \alias{gl.filter.maf}
-\title{Filter loci on the basis of minor allele frequency (MAF) in a genlight {adegenet} object}
+\title{Filter loci on the basis of minor allele frequency (MAF)}
 \usage{
-gl.filter.maf(x, threshold = 0.01, v = 2)
+gl.filter.maf(gl, threshold = 0.01)
 }
 \arguments{
-\item{x}{-- name of the genlight object containing the SNP data [required]}
+\item{gl}{a genlight object}
 
-\item{threshold}{-- threshold MAF -- loci with a MAF less than the threshold will be removed [default 0.01]}
-
-\item{v}{-- verbosity: 0, silent or fatal errors; 1, begin and end; 2, progress log ; 3, progress and results summary; 5, full report [default 2]}
+\item{threshold}{loci with a MAF less than this threshold will be removed}
 }
 \value{
 The reduced genlight dataset
 }
 \description{
 This script calculates the minor allele frequency for each locus and updates the locus
-metadata for FreqHomRef, FreqHomSnp, FreqHets and MAF (if it exists). It then uses 
+metadata for FreqHomRef, FreqHomSnp, FreqHets and MAF (if it exists). It then uses
 the updated metadata for MAF to filter loci.
 }
 \details{

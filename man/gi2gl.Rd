@@ -2,23 +2,27 @@
 % Please edit documentation in R/gi2gl.R
 \name{gi2gl}
 \alias{gi2gl}
-\title{Converts a genind object to genlight object}
+\title{Genind to genlight conversion}
 \usage{
 gi2gl(gi, parallel = TRUE)
 }
 \arguments{
-\item{gi}{-- a genind object}
+\item{gi}{a genind object}
 
-\item{parallel}{-- switch to deactivate parallel version. Default set to TRUE. Only for testing purpose.}
+\item{parallel}{Switch passed to genlight constructor.}
 }
 \value{
 A genlight object, with all slots filled.
 }
 \description{
-Converts a genind object to genlight object
+Converts a genind object to genlight object.
 }
 \details{
-Be aware due to ambiguity which one is the reference allele a combination of gi2gl(gl2gi(gl)) does not return an identical object (but in terms of analysis this conversions are equivalent)
+Note that \code{gl2gi(gi2gl(x))} may not return the original
+object due to the ambiguity in choice of the reference alleles.
+}
+\seealso{
+\code{\link{gi2gl}}, \code{\link[adegenet]{genlight}}
 }
 \author{
 Bernd Gruber (bugs? Post to \url{https://groups.google.com/d/forum/dartr})

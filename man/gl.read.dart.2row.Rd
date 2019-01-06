@@ -4,11 +4,11 @@
 \alias{gl.read.dart.2row}
 \title{Import SNP data from DArT and convert to  genlight \{agegenet\} format (gl)}
 \usage{
-gl.read.dart.2row(datafile, topskip, nmetavar, nas = "-",
-  ind.metafile = NULL, pbar = TRUE, v = 2)
+gl.read.dart.2row(filename, topskip, nmetavar, nas = "-",
+  ind.metafile = NULL, probar = TRUE, v = 2)
 }
 \arguments{
-\item{datafile}{-- name of csv file containing the DartSeq data in 2-row format (csv) [required]}
+\item{filename}{-- name of csv file containing the DartSeq data in 2-row format (csv) [required]}
 
 \item{topskip}{-- number of rows to skip before the header row (containing the specimen identities [required]}
 
@@ -18,7 +18,7 @@ gl.read.dart.2row(datafile, topskip, nmetavar, nas = "-",
 
 \item{ind.metafile}{-- name of csv file containing metadata assigned to each entity (individual) [default NULL]}
 
-\item{pbar}{-- display progress bar [FALSE]}
+\item{probar}{-- display progress bar [FALSE]}
 
 \item{v}{-- verbosity: 0, silent or fatal errors; 1, begin and end; 2, progress log ; 3, progress and results summary; 5, full report [default 2]}
 }
@@ -50,7 +50,7 @@ specimen metadata are combined into a genlight object. Refer to the genlight doc
 }
 \examples{
 \donttest{
-gl <- gl.read.dart.2row(datafile="SNP_DFwt15-1908_scores_2Row.csv", topskip=6, 
+gl <- gl.read.dart.2row(filename="SNP_DFwt15-1908_scores_2Row.csv", topskip=6, 
 nmetavar=16, nas="-", ind.metafile="metadata.csv" )
 }
 }

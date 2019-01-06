@@ -2,18 +2,18 @@
 % Please edit documentation in R/gl.Ho.r
 \name{gl.Ho}
 \alias{gl.Ho}
-\title{A very simple function to report observed Heterozygosity}
+\title{Observed Heterozygosity.}
 \usage{
 gl.Ho(gl)
 }
 \arguments{
-\item{gl}{-- a genlight object}
+\item{gl}{a genlight object}
 }
 \value{
-a simple vector wiht Ho for each loci
+The observed heterozygosity for each loci as a vector.
 }
 \description{
-A very simple function to report observed Heterozygosity
+Calculate the observed heterozygosity for each loci.
 }
 \author{
 Bernd Gruber (bugs? Post to \url{https://groups.google.com/d/forum/dartr})

@@ -4,14 +4,17 @@
 \alias{gl.report.bases}
 \title{Summary of base pair frequencies}
 \usage{
-gl.report.bases(gl)
+gl.report.bases(x, plot = TRUE, v = 2)
 }
 \arguments{
-\item{gl}{-- name of the DArT genlight object [required]}
+\item{x}{-- name of the DArT genlight object [required]}
+
+\item{plot}{-- if TRUE, histograms of base composition are produced [default TRUE]}
+
+\item{v}{-- verbosity: 0, silent or fatal errors; 1, begin and end; 2, progress log ; 3, progress and results summary; 5, full report [default 2]}
 }
 \value{
-Matrix containing the percent frequencies of each base (A,C,T,G) and the transition and 
-transversion frequencies.
+Matrix containing the percent frequencies of each base (A,C,T,G) and the transition and transversion frequencies.
 }
 \description{
 This script calculates the frequencies of the four bases, and the frequency of transitions and

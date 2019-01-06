@@ -2,20 +2,32 @@
 % Please edit documentation in R/gl.amova.r
 \name{gl.amova}
 \alias{gl.amova}
-\title{Performs and AMOVA using genlight data.}
+\title{Analysis of Molecular Variance}
 \usage{
 gl.amova(x, nperm = 100)
 }
 \arguments{
-\item{x}{-- name of the genlight containing the SNP genotypes, with population information [required]}
+\item{x}{a genlight object containing the SNP genotypes and
+population grouping}
 
-\item{nperm}{-- number of permuations to perform for hypothesis testing [default 100]. Please note should be set to 1000 for analysis.]}
+\item{nperm}{number of permuations to perform for hypothesis
+testing.}
 }
 \value{
-An object of class "amova" which is a list with a table of sums of square deviations (SSD), mean square deviations (MSD), and the number of degrees of freedom, and a vector of variance components.
+An object of class \code{pegas::amova}.
 }
 \description{
-This script performs an AMOVA based on the genetic distance matrix from stamppNeisD() [package StAMPP] using the amova() function from the package PEGAS for exploring within and between population variation. For detailed information use their help pages: ?pegas::amova, ?StAMPP::stamppAmova
+Performs an AMOVA using genlight data.
+}
+\details{
+This script performs an AMOVA based on the genetic distance matrix
+from stamppNeisD() [package StAMPP] using the amova() function
+from the package PEGAS for exploring within and between population
+variation. For detailed information see the help pages for amova
+and stamppAmova
+}
+\seealso{
+\code{\link[pegas]{amova}}, \code{\link[StAMPP]{stamppNeisD}}
 }
 \author{
 Bernd Gruber (bugs? Post to \url{https://groups.google.com/d/forum/dartr})
