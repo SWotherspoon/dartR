@@ -18,6 +18,8 @@ gl.pcoa <- function(gl, nfactors=5) {
   ## Compute PCA by SVD
   nv <- min(nfactors,nrow(x),ncol(x))
   s <- svd(x,0,nv)
+  rank <- sum(s$d^2 > 1.0e-12)
+  s$d <- s$d[seq_len(rank)]
   scores <- x%*%s$v
   colnames(scores) <- paste0("PC",1:ncol(s$v))
   colnames(s$v) <- paste0("Axis",1:ncol(s$v))
