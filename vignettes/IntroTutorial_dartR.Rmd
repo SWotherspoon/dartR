@@ -213,7 +213,7 @@ Using the example data set provided in the package (accessed via an internal pat
 dartfile <- system.file("extdata","testset_SNPs_2Row.csv", package="dartR")
 
 metafile <- system.file("extdata","testset_metadata.csv", package="dartR")
-gl <- gl.read.dart(filename=dartfile, ind.metafile = metafile, probar=FALSE)
+gl <- gl.read.dart(filename=dartfile, ind.metafile = metafile)
 ```
 
 The resultant genlight object, ```gl```, can be interrogated to determine if the data have been input correctly.
@@ -512,14 +512,14 @@ gl2 <- gl.filter.repavg(gl, t=1)
 
 4.	Filter out multiple snps in single sequence tags (!!!!!produces an error currently!!!!!)
 ```{r, eval=F, echo=F}
-gl2 <- gl.filter.secondary(gl)
+gl2 <- gl.filter.secondaries(gl)
 
 ```
 
 5.	Filter out monomorphic loci
 
 ```{r}
-gl2 <- gl.filter.monomorphs(gl, v=0)
+gl2 <- gl.filter.monomorphs(gl)
 ```
 
 
@@ -890,7 +890,7 @@ recpops<- factor(rep(LETTERS[1:5],50))
 glsub <- gl
 pop(glsub)<-recpops
 
-gi <- gl2gi(glsub, v=0) #v=0 suppresses output
+gi <- gl2gi(glsub) #v=0 suppresses output
 round(pairwise_D(gi),4)
 round(pairwise_Gst_Hedrick(gi),4)
 round(pairwise_Gst_Nei(gi),4)
@@ -1273,7 +1273,7 @@ The genlight objects for managing SNP data are a relatively recent development, 
 
 ```{r}
 gl <- testset.gl
-gi <- gl2gi(gl, v=0)
+gi <- gl2gi(gl)
 
 ```
 
