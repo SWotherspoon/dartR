@@ -5,12 +5,12 @@
 #' this script. It calculates the read depth as the sum of the average
 #' counts for the reference and alterate alleles.
 #'
-#' @param x a genlight object
+#' @param gl a genlight object
 #' @return The modified genlight object
 #' @author Arthur Georges (Post to \url{https://groups.google.com/d/forum/dartr})
 #' @examples
 #' #f <- utils.recalc.rdepth(testset.gl)
 utils.recalc.rdepth <- function(gl) {
-  gl@other$loc.metrics$rdepth <- gl@other$loc.metrics$AvgCountRef + g@other$loc.metrics$AvgCountSnp
+  gl@other$loc.metrics$rdepth <- gl@other$loc.metrics$AvgCountRef + gl@other$loc.metrics$AvgCountSnp
   gl
 }
