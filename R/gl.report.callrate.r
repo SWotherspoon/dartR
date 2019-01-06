@@ -41,7 +41,7 @@ gl.report.callrate <- function(x, method="loc", plot=FALSE, smearplot=FALSE) {
 
 # RECALCULATE THE CALL RATE, BRING IT UP TO DATE IN CASE gl.recalc.metrics HAS NOT BEEN RUN
 
-    x <- utils.recalc.callrate(x, v=1)
+    x <- utils.recalc.callrate(x)
 
 # FOR METHOD BASED ON LOCUS
 

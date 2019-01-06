@@ -59,7 +59,7 @@
 
 # RECALCULATE THE CALL RATE, BRING IT UP TO DATE IN CASE gl.recalc.metrics HAS NOT BEEN RUN
 
-   x <- utils.recalc.callrate(x, v=v)
+   x <- utils.recalc.callrate(x)
 
 # FOR METHOD BASED ON LOCUS
 
@@ -129,8 +129,8 @@
             cat(paste0(indNames(x3),"[",as.character(pop(x3)),"],"))
           }
             # Remove monomorphic loci
-              if (mono.rm) {x2 <- gl.filter.monomorphs(x2,v=v)}
-              if (recalc) { x2 <- gl.recalc.metrics(x2, v=v)}
+              if (mono.rm) {x2 <- gl.filter.monomorphs(x2)}
+              if (recalc) { x2 <- gl.recalc.metrics(x2)}
         }
       }
     # Recalculate the callrate
@@ -159,8 +159,8 @@
               cat(paste0(indNames(x3),"[",as.character(pop(x3)),"],"))
             }
             # Remove monomorphic loci
-            if (mono.rm) {x2 <- gl.filter.monomorphs(x2,v=v)}
-            if (recalc) { x2 <- gl.recalc.metrics(x2, v=v)}
+            if (mono.rm) {x2 <- gl.filter.monomorphs(x2)}
+            if (recalc) { x2 <- gl.recalc.metrics(x2)}
           }
         }
 
