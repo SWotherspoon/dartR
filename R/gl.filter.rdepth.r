@@ -15,13 +15,17 @@
 ##' @author Arthur Georges (Post to \url{https://groups.google.com/d/forum/dartr})
 ##' @examples
 ##' gl.report.rdepth(testset.gl)
-##' result <- gl.filter.rdepth(testset.gl, lower=8, upper=50, v=3)
+##' result <- gl.filter.rdepth(testset.gl, lower=8, upper=50)
 ##' @export
 gl.filter.rdepth <- function(gl, lower=5, upper=50) {
 
   gl <- utils.recalc.rdepth(gl)
-  keep <- (x@other$loc.metrics["rdepth"]>=lower & x@other$loc.metrics["rdepth"]<=upper)
+  keep <- (gl@other$loc.metrics["rdepth"]>=lower & gl@other$loc.metrics["rdepth"]<=upper)
 
-  if(!all(keep)) gl <- gl[keep,]
+  ## Only subset if necessary
+  if(!all(keep)) {
+    gl <- gl[,keep]
+    gl@other$loc.metrics <- gl@other$loc.metrics[keep,]
+  }
   gl
 }
